@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
 from login.models import Registration
+from django.db import connection
 
 
 
@@ -39,6 +40,11 @@ def register(request):
     'registration/register.html',
     variables,
     )
+
+
+# def nextvalue():
+	
+	# return 
  
 def register_success(request):
     return render_to_response(
