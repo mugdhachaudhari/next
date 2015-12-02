@@ -1,19 +1,30 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.db import connection
+#from login.views import nextvalue
 
 # Create your models here.
 
-class Registration(models.Model):
-    userid = models.IntegerField(primary_key=True)
-    email = models.CharField(max_length=320)
-    password = models.TextField()  # This field type is a guess.
-    startdate = models.DateTimeField(blank=True, null=True)
-    enddate = models.DateTimeField(blank=True, null=True)
+def nextvalue():
+	cursor = connection.cursor()
+	cursor.execute("select sequence_userid.nextval from dual")
+	row = cursor.fetchone()
+	return row[0]
 
-    class Meta:
-        managed = False
-        db_table = 'registration'
-        unique_together = (('email', 'enddate'),)
+
+class Registration(models.Model):
+	userid = models.IntegerField(primary_key=True, default = nextvalue)
+	email = models.CharField(max_length=320)
+	password = models.BinaryField(max_length=200)  # This field type is a guess.
+	startdate = models.DateTimeField(blank=True, null=True)
+	enddate = models.DateTimeField(blank=True, null=True)
+
+	class Meta:
+		managed = False
+		db_table = 'registration'
+		unique_together = (('email', 'enddate'),)
+
+
 
 
 class Scope(models.Model):
