@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 import django.contrib.auth
-django.contrib.auth.LOGIN_URL = '/'
+# django.contrib.auth.LOGIN_URL = '/'
 
 # Application definition
 
@@ -55,6 +55,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 ROOT_URLCONF = 'nextnbr.urls'
 
