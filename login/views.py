@@ -59,23 +59,23 @@ def home(request):
     { 'user': request.user }
     )
 
-def checkproccur(request):
-    cursor = connection.cursor()
-	# l_cursor = cx_Oracle.CURSOR
-    err_cd = cursor.var(cx_Oracle.NUMBER).var
-    err_msg = cursor.var(cx_Oracle.STRING).var
-    frndscur = cursor.var(cx_Oracle.CURSOR).var
-#     cursor.callproc('showfriends', [21, 'frnds_cursor', err_cd, err_msg])
-    result = cursor.callproc('showfriends', [2,frndscur, err_cd, err_msg])
-    if result[2] == '0':
-        row = result[1].fetchall()
-        return HttpResponse(row)
-    else:
-        response = HttpResponse()
-        response.write(result[2])
-        response.write(" ")
-        response.write(result[3])
-        return response
+# def checkproccur(request):
+#     cursor = connection.cursor()
+# 	# l_cursor = cx_Oracle.CURSOR
+#     err_cd = cursor.var(cx_Oracle.NUMBER).var
+#     err_msg = cursor.var(cx_Oracle.STRING).var
+#     frndscur = cursor.var(cx_Oracle.CURSOR).var
+# #     cursor.callproc('showfriends', [21, 'frnds_cursor', err_cd, err_msg])
+#     result = cursor.callproc('showfriends', [2,frndscur, err_cd, err_msg])
+#     if result[2] == '0':
+#         row = result[1].fetchall()
+#         return HttpResponse(row)
+#     else:
+#         response = HttpResponse()
+#         response.write(result[2])
+#         response.write(" ")
+#         response.write(result[3])
+#         return response
 	
 # def checkproc(request):
 	# cursor = connection.cursor()

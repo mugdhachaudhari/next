@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^register/success/$', register_success),
     url(r'^home/$', home),
 	# url(r'^checkproc/$', checkproc),
-	url(r'^checkproccur/$', checkproccur),
+# 	url(r'^checkproccur/$', checkproccur),
 	url(r'^accounts/profile/$', profile),
 	
 ]
