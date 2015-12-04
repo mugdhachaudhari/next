@@ -1,5 +1,5 @@
 # Create your views here.
-from login.forms import *
+from profileapp.forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
@@ -21,4 +21,13 @@ import cx_Oracle
 
  
 def profile(request):
-	return HttpResponse("Update your profile")	
+	if request.method == 'POST':
+		form = ProfileForm(request.POST)
+		if form.is_valid():
+			user = 'hi'
+			return HttpResponseRedirect('/home/')
+	else:
+		form = ProfileForm()
+	variables = RequestContext(request, {'form': form})
+	return render_to_response('profile.html',variables,)
+

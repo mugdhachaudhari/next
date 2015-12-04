@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from login.views import *
+from profileapp.views import *
 #from myapp.views import index
 
 urlpatterns = [
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'^register/success/$', register_success),
     url(r'^home/$', home),
 	# url(r'^checkproc/$', checkproc),
-	# url(r'^accounts/profile/$', profile),
+	url(r'^checkproccur/$', checkproccur),
+	url(r'^accounts/profile/$', profile),
 	
 ]
