@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.conf.global_settings import MEDIA_ROOT
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ##Added by Mugdha
@@ -25,11 +26,13 @@ SECRET_KEY = 'vgt7zu$op)pu7d*$oa&-ds@2eq-a&=kpr2rezk@sb)*@i@pau+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+FILER_DEBUG=True
 ALLOWED_HOSTS = []
 
 import django.contrib.auth
 django.contrib.auth.LOGIN_URL = '/'
+AUTH_PROFILE_MODULE = 'profileapp.UserProfile'
+
 
 # Application definition
 
@@ -41,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'login',
+    'profileapp'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,6 +60,12 @@ MIDDLEWARE_CLASSES = (
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+#MEDIA_ROOT ='C:\\Users\\Vasundhara Patil\\Documents\\GitHub\\next\\media'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+# MEDIA_ROOT='C:\\Users\\Vasundhara Patil\\Desktop\\images'
+MEDIA_URL='/media/'
+STATIC_URL='/static/'
+STATIC_ROOT=''
 
 ROOT_URLCONF = 'nextnbr.urls'
 

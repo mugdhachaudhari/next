@@ -9,11 +9,12 @@ from django.template import RequestContext
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
-from login.models import Registration
-from login.models import Users
+# from login.models import Registration
+# from login.models import Users
 from django.db import connection
 from django.contrib.auth.hashers import make_password
 import cx_Oracle
+from nextnbr.settings import MEDIA_URL
 
 
 
@@ -30,6 +31,7 @@ def register(request):
             password=form.cleaned_data['password1'],
             email=form.cleaned_data['email']
             )
+            request.session['email'] = form.cleaned_data['email']
             return HttpResponseRedirect('/register/success/')
     else:
         form = RegistrationForm()
@@ -54,9 +56,11 @@ def logout_page(request):
 
 @login_required
 def home(request):
+#     filename = "C:\Users\Vasundhara Patil\Documents\GitHub\next\media\uploaded_files\ab1_1449302455_874656_Frozen_Queen_Elsa_Wallpaper.jpg"
+    phtp = "uploaded_files/Frozen_Queen_Elsa_Wallpaper.jpg"
     return render_to_response(
     'home.html',
-    { 'user': request.user }
+    { 'user': request.user, 'MEDIA_URL' : MEDIA_URL, 'image_name' : phtp }
     )
 
 # def checkproccur(request):
