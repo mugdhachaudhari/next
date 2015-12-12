@@ -1,0 +1,51 @@
+{% extends "home1.html" %}
+{% block content %}
+	<html>
+		<style>
+		#nav {
+			line-height:30px;
+			background-color:#B0B0B0;
+			height:600px;
+			width:500px;
+			float:left;
+			padding:5px;	
+				}
+		#header {
+			background-color:#880000;
+			color:white;
+			text-align:center;
+			padding:5px
+				}
+		a:hover {
+			color:black;
+			background-color:transparent;
+			text-decoration:underline;
+				}
+			
+		a:link {
+			color:black;
+			background-color:none;
+			text-decoration:none;
+				}
+				
+		a:visited {
+			color:black;
+			background-color:none;
+			text-decoration:none;
+				}
+		</style>
+		
+		<div id="header">
+			<h1>Hi {{ user.username }},welcome back!!!</h1>
+		</div>
+		<div id="nav">
+			<a href="newphoto.html">
+			<img src="http://findicons.com/files/icons/1589/free_twitter/128/geek_girl.png" width="200" height="200" border="0"></a>
+			<br>
+			<h2><a href="profile.html">Update Profile</a><br></h2>
+			<h2><a href="msgsuccess" target="content">Messages</a><br></h2>
+		</div>
+		
+		
+	</html>
+{% endblock %}

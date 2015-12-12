@@ -1,0 +1,79 @@
+{% block content %}
+	<html>
+	<style>
+	#table{
+	color:white;
+	background-color:#B0B0B0;
+	margin-top:100px;
+	align:center;
+	text-align:center;
+	border:1px solid;
+	boder-margin-right:300px;
+		}
+	a:hover {
+		color:black;
+		background-color:white;
+		text-decoration:underline;
+		-webkit-border-radius:10px;
+		padding:5px 15px;
+		border:20px;
+		border-radius:10px;
+			}
+			
+		a:link {
+		color:black;
+		background-color:white;
+		text-decoration:none;
+		-webkit-border-radius:10px;
+		padding:5px 15px;
+		border:20px;
+		border-radius:10px;
+			}
+		a:visited {
+		color:black;
+		background-color:white;
+		-webkit-border-radius:10px;
+		padding:5px 15px;
+		border:20px;
+		border-radius:10px;
+			}
+		#header{
+			color:white;
+			line-height:30px;
+			background-color:#880000;
+			width:1000px;
+			padding:5px;
+			text-align:center;
+			}
+	#text{
+	margin-left:100px;}
+	#button{
+	margin-left:200px;}
+	</style>
+	<div id="header">
+		<h2><em>List of all users</em></h2>
+	</div>
+	<p id="p">  </p>
+	<div id="table">
+	{% if row %}
+		{% for v in row %}
+		<div id="text">
+		<p hidden>i = {{v.0}}</p>
+		<p><h3><font color="black">{{v.1}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{v.2}}<button  style="float:right;margin-right:250px" value={{v.0}} onclick="func(this)">SendRequest</button></h3></p>
+		</div>
+		<script>
+		function func(objButton)
+		{
+		var x = objButton.value;
+		document.cookie= x;
+		window.location="/frequest/" + x;
+		}
+		</script>
+		{% endfor %}
+	{% else %}
+		<p> no display</p>
+	{% endif %}
+	</div>
+	
+	
+{% endblock %}
