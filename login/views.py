@@ -9,8 +9,14 @@ from django.template import RequestContext
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
+<<<<<<< HEAD
 # from login.models import Registration
 from login.models import Blocks
+=======
+from login.models import Registration
+from login.models import Users
+from login.models import notification
+>>>>>>> refs/remotes/origin/master
 from django.db import connection
 from django.contrib.auth.hashers import make_password
 import cx_Oracle
@@ -22,10 +28,10 @@ from profileapp.models import UserProfile
 
 
 # Create your views here.
-
  
 @csrf_protect
 def register(request):
+<<<<<<< HEAD
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -41,22 +47,39 @@ def register(request):
     variables = RequestContext(request, {
     'form': form
     })
+=======
+	if request.method == 'POST':
+		form = RegistrationForm(request.POST)
+		if form.is_valid():
+			user = User.objects.create_user(
+			username=form.cleaned_data['username'],
+			password=form.cleaned_data['password1'],
+			email=form.cleaned_data['email']
+			)
+		return HttpResponseRedirect('/register/success/')
+	else:
+		form = RegistrationForm()
+	variables = RequestContext(request, {
+	'form': form,
+	})
+>>>>>>> refs/remotes/origin/master
  
-    return render_to_response(
-    'registration/register.html',
-    variables,
-    )
+	return render_to_response(
+	'registration/register.html',
+	variables,
+	)
 
 
 def register_success(request):
-    return render_to_response(
-    'registration/success.html',
-    )
+	return render_to_response(
+	'registration/success.html'
+	)
  
 def logout_page(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+<<<<<<< HEAD
 @login_required
 def home_1(request):
 #     filename = "C:\Users\Vasundhara Patil\Documents\GitHub\next\media\uploaded_files\ab1_1449302455_874656_Frozen_Queen_Elsa_Wallpaper.jpg"
@@ -136,6 +159,10 @@ def search(request):
 #   
 #     return render_to_response('viewmsg.html',variables,)
         
+=======
+
+	
+>>>>>>> refs/remotes/origin/master
 
 def checkproccur(request):
     cursor = connection.cursor()

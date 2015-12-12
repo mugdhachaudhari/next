@@ -1,1 +1,133 @@
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% extends "home1.html" %}
+
+{% block title %}Heres's your news feed{{user}}{% endblock %}
+{% block head %}Here's your news feed{{user}}{% endblock %}
+{% block content %}
+	{% if notifications.count > 0 %}
+		<h3> notification</h3>
+		{% for n in notifications %}
+			<p><a href="/notification/show/{{n.id}}">{{n.title}}</a></p>
+		{% endfor %}
+	{% endif %}
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<title>home page</title>
+			<style>
+			#header {
+			background-color:#880000;
+			color:white;
+			text-align:center;
+			padding:5px;
+					}
+			#feeds {
+			background-color:#B0B0B0;
+			text-align:center;
+			top:100px;
+			width:1000px;
+			padding:3px;
+					}
+			#tag {
+			color:white;
+			text-align:right;
+			padding:5px;
+				}
+		
+			#nav1 {
+			line-height:30px;
+			background-color:#B0B0B0;
+			height:300px;
+			width:200px;
+			float:right;
+			padding:5px
+				}
+			#section {
+			top:100px;
+			width:600px;
+			float:left;
+			padding:10px;	 	 
+				}
+			#footer {
+			float:bottom;
+			background-color:#880000;
+			color:white;
+			clear:both;
+			text-align:center;
+			padding:5px;	 	 
+				}
+			a:hover {
+			color:white;
+			background-color:transparent;
+			text-decoration:underline;
+				}
+			
+			a:link {
+			color:white;
+			background-color:none;
+			text-decoration:none;
+				}
+			a:visited {
+			color:white;
+			background-color:#880000;
+			text-decoration: none;
+				}
+			#search {
+			margin-top:10px;
+			text-align:left;
+			}
+			
+			</style>
+		</head>
+		<body>
+
+		<div id="header">
+			<h1><em>Here's your news feed {{userid}}</em></h1>
+			<div id="search">
+				
+			</div>
+			<div id="tag">
+				<div id="search">
+					Search:<input type="text" name="searchtext">&nbsp&nbsp&nbsp
+					<input type="submit" value="search">
+				</div>
+				<a href="/friends/" target="content">Friends</a>&nbsp&nbsp
+				<a href="/neighbours/">Neighbours</a>&nbsp&nbsp
+				<a href="/blocks/">Blocks</a>&nbsp&nbsp
+				<a href="/notifications/">Notifications</a>&nbsp&nbsp
+				<a href="/friendrequest/">Friend Request</a>&nbsp
+
+			</div>
+		</div>
+			<div id="feeds">
+				<h3><a href="/friendthreads/" target="content">Friend Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="blockthreads" target="content">Block Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="neighbourhoodthreads" target="content">Neighbourhood Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="neighbourthreads" target="content">Neighbour Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="allthreads" target="content">All Feeds</a><br></h3>
+			</div>
+		<div id="section">
+			<a href="/friendfeeds/" target="content">Friend Feeds</a>
+			{% if row %}
+				{% for v in row %}
+					<p>{{v.2}}{{v.3}}<button  style="float:right;margin-right:250px" value={{v.0}} onclick="func(this)">Reply</button></p>
+					<br>
+				{% endfor %}
+			{% else %}
+				<p> no display</p>
+			{% endif %}
+		</div>
+			<script>
+		function func(objButton)
+		{
+		var x = objButton.value;
+		document.cookie= x;
+		window.location="/reply/" + x;
+		}
+		</script>
+			
+			<a href="/logout/">Logout</a>
+		</div>
+		</head>
+	</body>
+	</html>
+{% endblock %}
+>>>>>>> refs/remotes/origin/master

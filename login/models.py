@@ -1,7 +1,14 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.db import connection
+<<<<<<< HEAD
 from profileapp.models import UserProfile
+=======
+from django.contrib.auth.models import User
+from django.db.models import signals
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+>>>>>>> refs/remotes/origin/master
 #from login.views import nextvalue
 
 # Create your models here.
@@ -16,6 +23,7 @@ class Blocks(models.Model):
  
     class Meta:
         managed = False
+<<<<<<< HEAD
         db_table = 'blocks'
 
 
@@ -209,5 +217,43 @@ class Blocks(models.Model):
 # 
 # 
 # 
+
+
+
+class notification(models.Model):
+	# userid = models.ForeignKey('Users', db_column='userid')
+	user = models.OneToOneField(User, db_column = 'userid')
+	title = models.CharField(max_length=256)
+	message = models.TextField()
+	viewed = models.BooleanField(default=False)
+	# user = models.ForeignKey(User)
+	
+
+	class Meta:
+		managed = False
+		db_table = 'notification'
+		# unique_together = (('userid', 'scopeid', 'enddate'),)
+
+
+@receiver(post_save, sender=User)
+def create_welcome_message(sender, **kwargs):
+	if kwargs.get('created', False):
+		notification.objects.create(user=kwargs.get('instance'),
+									title="Welcome to Next Neighbour!!",
+									message="Thanks for signing up!")
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> refs/remotes/origin/master
 
 
