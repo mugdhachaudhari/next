@@ -18,17 +18,18 @@ from django.contrib import admin
 from login.views import *
 #from django.contrib import user_messages
 from profileapp.views import *
+from nextnbr.settings import MEDIA_ROOT
 from home.views import *
 from mail.views import *
-from notification.views import *
+# from notification.views import *
 #from django_messages.urls import *
 #from myapp.views import index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-	url(r'^show/(?P<notification_id>\d+)/$',show_notification),
-	url(r'^delete/(?P<notification_id>\d+)/$',delete_notification),
-	url(r'^homepage/', 'profileapp.views.homepage'),
+	# url(r'^show/(?P<notification_id>\d+)/$',show_notification),
+	# url(r'^delete/(?P<notification_id>\d+)/$',delete_notification),
+	url(r'^homepage/', 'home.views.homepage'),
     url(r'^$', 'django.contrib.auth.views.login'),
 	url(r'^friendrequest/$', friendrequest),
     url(r'^logout/$', logout_page),
@@ -38,6 +39,10 @@ urlpatterns = [
 	url(r'^accounts/login/$', 'django.contrib.auth.views.login'), # If user is not login it will redirect to login page
     url(r'^register/$', register),
     url(r'^register/success/$', register_success),
+    url(r'^home1/$', home_1),
+    url(r'^viewprofile/$', viewownprofile),
+	# url(r'^checkproc/$', checkproc),
+	url(r'^checkproccur/$', checkproccur),
     url(r'^home/$', home),
 	url(r'^home/homepage/$', homepage),
 	#url(r'^messages/',django_messages.urls)
@@ -70,5 +75,10 @@ urlpatterns = [
 	url(r'^notifications/$', notifications),
 	#url(r'^getid/$', getid),
 	url(r'^accounts/profile/$', profile),
-	
-]
+    url(r'^blockrequest/$', blockrequest),
+    url(r'^search/$', search),
+#     url(r'^viewmsg/$', viewmsg),      
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+                 {'document_root': MEDIA_ROOT}),
+] 
+#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

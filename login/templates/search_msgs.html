@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <form method="post" action="/viewmsg/">{% csrf_token %}
+        <table border = '1'>
+		<tr><th>Select</th><th>Title</th><th>Message</th><th>Posted By</th></tr>
+{% if msgs %}
+    {% for r in msgs %}
+         <tr><td><input type="radio" value="{{ r }}" /></td><td>{{ r.2 }}</td><td>{{ r.3 }}</td><td>{{ r.4 }}</td></tr>
+    {% endfor %}
+{% else %}
+    <p>There are no messages.</p>
+{% endif %}
+         
+        </table>
+		<br>
+     <input type="submit" value="View" />   
+   </form>
+   <br>
+    <a href="/home">home</a>
+{% endblock %}

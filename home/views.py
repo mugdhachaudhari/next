@@ -10,13 +10,13 @@ from django.template import RequestContext
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
-from login.models import Registration
 from home.forms import *
-from login.models import Users
+# from home.models import Users
 from django.db import connection
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
 import cx_Oracle
+from nextnbr.settings import MEDIA_URL
 # Create your views here.
 
 @login_required
@@ -49,17 +49,18 @@ def homepage(request):
 def home(request):
 	u = User.objects.get(username = request.user)
 	#m = request.session['userid']
-	n = notification.objects.filter(user=request.user, viewed=False)
-	request.session['userid'] = u.id 
+	# n = notification.objects.filter(user=request.user, viewed=False)
+	request.session['userid'] = u.id
+	prfl = request.user.profile
+	if not prfl.firstname:
+		return HttpResponseRedirect('/accounts/profile/', {'alert' : True})
 	return render_to_response(
-	'frame.html',{ 'user': request.user,'n':n})
+	'frame.html',{ 'user': request.user})
 	
 @login_required
 def ho(request):
-    return render_to_response(
-    'ho.html',
-    { 'user': request.user }
-    )
+	prfl = request.user.profile
+	return render_to_response('ho.html',{ 'user': request.user, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
 
 	
 def allfeeds(request):

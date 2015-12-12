@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.conf.global_settings import MEDIA_ROOT
+from django.utils import timezone
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ##Added by Mugdha
@@ -27,11 +29,22 @@ EMAIL_HOST='localhost'
 EMAIL_PORT=25
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+FILER_DEBUG=True
 ALLOWED_HOSTS = []
 
 import django.contrib.auth
 django.contrib.auth.LOGIN_URL = '/'
+AUTH_PROFILE_MODULE = 'profileapp.UserProfile'
+
+GEOPOSITION_MAP_OPTIONS = {
+    'minZoom': 3,
+    'maxZoom': 18,
+}
+
+GEOPOSITION_MARKER_OPTIONS = {
+    'cursor': 'move'
+}
+
 
 # Application definition
 
@@ -43,10 +56,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'login',
+    'profileapp',
+    'geoposition',
 	'bootstrap3',
-	'notification',
 	'django_messages',
 	'user_messages',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,6 +78,12 @@ MIDDLEWARE_CLASSES = (
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+#MEDIA_ROOT ='C:\\Users\\Vasundhara Patil\\Documents\\GitHub\\next\\media'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+# MEDIA_ROOT='C:\\Users\\Vasundhara Patil\\Desktop\\images'
+MEDIA_URL='/media/'
+#STATIC_URL='/static/'
+STATIC_ROOT=''
 
 ROOT_URLCONF = 'nextnbr.urls'
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -91,7 +112,7 @@ WSGI_APPLICATION = 'nextnbr.wsgi.application'
 DATABASES = {
     'default': {
 		'ENGINE' : 'django.db.backends.oracle',
-		'NAME' : 'localhost:1521/pdborcl',
+		'NAME' : 'localhost:1521/pdb1',
 		'USER' : 'nextnbr',
 		'PASSWORD' : 'Passw0rd',
 		#'HOST' : 'localhost',
@@ -112,13 +133,23 @@ CACHES = {
 
 LANGUAGE_CODE = 'en-us'
 
+# TIME_ZONE = 'UTC'
+TIME_ZONE='America/New_York'
+# timezone.activate(TIME_ZONE)
+# timezone.localtime(timezone.now())
+# TIME_ZONE = timezone.get_fixed_timezone(-05.00)
+# TIME_ZONE = timezone.get_current_timezone()
+# timezone.activate(TIME_ZONE)
 TIME_ZONE = 'Americs/New_York'
 
 USE_I18N = True
 
 USE_L10N = True
 
+
+# USE_TZ = True
 #USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
