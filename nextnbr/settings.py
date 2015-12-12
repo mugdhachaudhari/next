@@ -56,15 +56,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'login',
-<<<<<<< HEAD
     'profileapp',
     'geoposition',
-=======
 	'bootstrap3',
-	'notification',
 	'django_messages',
 	'user_messages',
->>>>>>> refs/remotes/origin/master
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -85,7 +82,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 # MEDIA_ROOT='C:\\Users\\Vasundhara Patil\\Desktop\\images'
 MEDIA_URL='/media/'
-STATIC_URL='/static/'
+#STATIC_URL='/static/'
 STATIC_ROOT=''
 
 ROOT_URLCONF = 'nextnbr.urls'
@@ -115,7 +112,7 @@ WSGI_APPLICATION = 'nextnbr.wsgi.application'
 DATABASES = {
     'default': {
 		'ENGINE' : 'django.db.backends.oracle',
-		'NAME' : 'localhost:1521/pdborcl',
+		'NAME' : 'localhost:1521/pdb1',
 		'USER' : 'nextnbr',
 		'PASSWORD' : 'Passw0rd',
 		#'HOST' : 'localhost',
@@ -136,7 +133,6 @@ CACHES = {
 
 LANGUAGE_CODE = 'en-us'
 
-<<<<<<< HEAD
 # TIME_ZONE = 'UTC'
 TIME_ZONE='America/New_York'
 # timezone.activate(TIME_ZONE)
@@ -144,19 +140,16 @@ TIME_ZONE='America/New_York'
 # TIME_ZONE = timezone.get_fixed_timezone(-05.00)
 # TIME_ZONE = timezone.get_current_timezone()
 # timezone.activate(TIME_ZONE)
-=======
 TIME_ZONE = 'Americs/New_York'
 
->>>>>>> refs/remotes/origin/master
 USE_I18N = True
 
 USE_L10N = True
 
-<<<<<<< HEAD
+
 # USE_TZ = True
-=======
 #USE_TZ = True
->>>>>>> refs/remotes/origin/master
+
 
 
 # Static files (CSS, JavaScript, Images)

@@ -45,8 +45,10 @@
 			padding:5px;
 			text-align:center;
 			}
-		#text {
-		}
+			#text{
+	margin-left:100px;}
+	#button{
+	margin-left:200px;}
 	</style>
 	<div id="header">
 		<h2><em>Blocks</em></h2>
@@ -58,7 +60,10 @@
 		 {% with i as "0" %}
 		 
 		<div id="text">
-		<p style="float:left"><h3><font color="black">{{v.0}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{v.1}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button  style="float:right;margin-right:250px" value={{v.0}} onclick="func(this)">SendRequest</button></font></h3></p>
+<table border="0" cellspacing = "10" >
+	<tr><td>{{v.0}}</td><td>{{v.1}}</td><td><button  style = "float:right" value={{v.0}} onclick="func(this)">SendRequest</button></td></tr>
+
+</table>
 		</div>
 		{% endwith %}
 		{% endfor %}

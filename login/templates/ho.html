@@ -39,11 +39,16 @@
 			<h1>Hi {{ user.username }},welcome back!!!</h1>
 		</div>
 		<div id="nav">
-			<a href="newphoto.html">
-			<img src="http://findicons.com/files/icons/1589/free_twitter/128/geek_girl.png" width="200" height="200" border="0"></a>
+			{% if prfl.photopath %}
+			<img src= "{{ MEDIA_URL }}{{ prfl.photopath }}" width="300" height="200" border="0"></a>
+			{% endif %}
 			<br>
-			<h2><a href="profile.html">Update Profile</a><br></h2>
+			<h2><a href="/accounts/profile/" target="content">Update Profile</a><br></h2>
 			<h2><a href="msgsuccess" target="content">Messages</a><br></h2>
+			<h2><a href="/viewprofile/" target="content">View Profile</a><br></h2>
+			<h2><a href="/search/" target="content">Search Message</a><br></h2>
+			<h2><a href="/logout/" target="_top">Logout</a><br></h2>
+			
 		</div>
 		
 		
