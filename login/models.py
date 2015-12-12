@@ -6,6 +6,19 @@ from profileapp.models import UserProfile
 
 # Create your models here.
 
+class Blocks(models.Model):
+    bid = models.IntegerField(primary_key=True)
+    blkdesc = models.CharField(max_length=100, blank=True, null=True)
+    swc = models.TextField()  # This field type is a guess.
+    nec = models.TextField()  # This field type is a guess.
+    dateentered = models.DateTimeField(blank=True, null=True)
+    isactive = models.CharField(max_length=1, blank=True, null=True)
+ 
+    class Meta:
+        managed = False
+        db_table = 'blocks'
+
+
 # def nextvalue():
 # 	cursor = connection.cursor()
 # 	cursor.execute("select sequence_userid.nextval from dual")
@@ -80,17 +93,7 @@ from profileapp.models import UserProfile
 #         managed = False
 #         db_table = 'neighbourhood'
 # 
-# class Blocks(models.Model):
-# 	bid = models.IntegerField(primary_key=True)
-# 	blkdesc = models.CharField(max_length=100, blank=True, null=True)
-# 	swc = models.TextField()  # This field type is a guess.
-# 	nec = models.TextField()  # This field type is a guess.
-# 	dateentered = models.DateTimeField(blank=True, null=True)
-# 	isactive = models.CharField(max_length=1, blank=True, null=True)
-# 
-# 	class Meta:
-# 		managed = False
-# 		db_table = 'blocks'
+
 # 
 # 
 # 

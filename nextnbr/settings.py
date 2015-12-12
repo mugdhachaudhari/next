@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from django.conf.global_settings import MEDIA_ROOT
+from django.utils import timezone
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ##Added by Mugdha
@@ -33,6 +34,15 @@ import django.contrib.auth
 django.contrib.auth.LOGIN_URL = '/'
 AUTH_PROFILE_MODULE = 'profileapp.UserProfile'
 
+GEOPOSITION_MAP_OPTIONS = {
+    'minZoom': 3,
+    'maxZoom': 18,
+}
+
+GEOPOSITION_MARKER_OPTIONS = {
+    'cursor': 'move'
+}
+
 
 # Application definition
 
@@ -44,7 +54,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'login',
-    'profileapp'
+    'profileapp',
+    'geoposition',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,13 +126,18 @@ CACHES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
+# TIME_ZONE = 'UTC'
+TIME_ZONE='America/New_York'
+# timezone.activate(TIME_ZONE)
+# timezone.localtime(timezone.now())
+# TIME_ZONE = timezone.get_fixed_timezone(-05.00)
+# TIME_ZONE = timezone.get_current_timezone()
+# timezone.activate(TIME_ZONE)
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

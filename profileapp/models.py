@@ -3,6 +3,8 @@ from django.db import models
 from django.db import connection
 from django.contrib.auth.models import User
 from time import time
+from geoposition.fields import GeopositionField
+from geoposition import Geoposition
 
 #from login.views import nextvalue
 
@@ -30,25 +32,41 @@ from time import time
 def get_upload_file_name(instance, filename):
 # 	return "uploaded_files/%s_%s" % (str(time()).replace('.','_'), filename)
 	return "uploaded_files/%s_%s_%s" % (instance.user, str(time()).replace('.','_'), filename)
+# 	return "uploaded_files/%s_%s" % (instance.user, filename)
 
 class UserProfile(models.Model):
 # 	user = models.ForeignKey(User, unique=True, db_column = 'userid')
 	user = models.OneToOneField(User, primary_key = True, db_column = 'userid')
-	firstname = models.CharField(max_length = 50)
-	lastname = models.CharField(max_length = 50)
+	firstname = models.CharField(max_length = 50, blank = True)
+	lastname = models.CharField(max_length = 50, blank = True)
 	apt = models.CharField(max_length = 10, blank = True)
-	street = models.CharField(max_length = 100, default = 'Street')
-	city = models.CharField(max_length = 50, default = 'City')
-	state = models.CharField(max_length = 50, default = 'State')
-	zip = models.CharField(max_length = 5, default = 'Zip')
-	profle = models.TextField()
-	photopath = models.FileField(upload_to=get_upload_file_name)
+	street = models.CharField(max_length = 100, blank = True)
+	city = models.CharField(max_length = 50, blank = True)
+	state = models.CharField(max_length = 50, blank = True)
+	zip = models.CharField(max_length = 5, blank = True)
+	profle = models.TextField(blank = True)
+	photopath = models.FileField(upload_to=get_upload_file_name, blank =True)
+	loc = GeopositionField()
+# 	loc = GeopositionField(default=Geoposition([40.77,73.98]))
 	
 	class Meta:
 		managed = False
 		db_table = ('users')
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+
+
+# class Blocks(models.Model):
+# 	bid = models.IntegerField(primary_key=True)
+# 	blkdesc = models.CharField(max_length=100, blank=True, null=True)
+# 	swc = models.TextField()  # This field type is a guess.
+# 	nec = models.TextField()  # This field type is a guess.
+# 	dateentered = models.DateTimeField(blank=True, null=True)
+# 	isactive = models.CharField(max_length=1, blank=True, null=True)
+#  
+# 	class Meta:
+# 		managed = False
+# 		db_table = 'blocks'
 
 # class Scope(models.Model):
 #     scopeid = models.IntegerField(primary_key=True)
@@ -102,17 +120,7 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 #         managed = False
 #         db_table = 'neighbourhood'
 # 
-# class Blocks(models.Model):
-# 	bid = models.IntegerField(primary_key=True)
-# 	blkdesc = models.CharField(max_length=100, blank=True, null=True)
-# 	swc = models.TextField()  # This field type is a guess.
-# 	nec = models.TextField()  # This field type is a guess.
-# 	dateentered = models.DateTimeField(blank=True, null=True)
-# 	isactive = models.CharField(max_length=1, blank=True, null=True)
-# 
-# 	class Meta:
-# 		managed = False
-# 		db_table = 'blocks'
+
 # 
 # 
 # 

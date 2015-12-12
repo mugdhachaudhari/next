@@ -28,10 +28,14 @@ urlpatterns = [
 	url(r'^accounts/login/$', 'django.contrib.auth.views.login'), # If user is not login it will redirect to login page
     url(r'^register/$', register),
     url(r'^register/success/$', register_success),
-    url(r'^home/$', home),
+    url(r'^home1/$', home_1),
+    url(r'^viewprofile/$', viewprofile),
 	# url(r'^checkproc/$', checkproc),
-# 	url(r'^checkproccur/$', checkproccur),
+	url(r'^checkproccur/$', checkproccur),
 	url(r'^accounts/profile/$', profile),
+    url(r'^blockrequest/$', blockrequest),
+    url(r'^search/$', search),
+#     url(r'^viewmsg/$', viewmsg),      
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
                  {'document_root': MEDIA_ROOT}),
 ] 
