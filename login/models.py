@@ -1,6 +1,10 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.db import connection
+from django.contrib.auth.models import User
+from django.db.models import signals
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 #from login.views import nextvalue
 
 # Create your models here.
@@ -173,19 +177,29 @@ class Msgrecipientcustom(models.Model):
         unique_together = (('threadid', 'userid', 'enddate'),)
 
 
+class notification(models.Model):
+	# userid = models.ForeignKey('Users', db_column='userid')
+	user = models.OneToOneField(User, db_column = 'userid')
+	title = models.CharField(max_length=256)
+	message = models.TextField()
+	viewed = models.BooleanField(default=False)
+	# user = models.ForeignKey(User)
+	
+
+	class Meta:
+		managed = False
+		db_table = 'notification'
+		# unique_together = (('userid', 'scopeid', 'enddate'),)
 
 
+@receiver(post_save, sender=User)
+def create_welcome_message(sender, **kwargs):
+	if kwargs.get('created', False):
+		notification.objects.create(user=kwargs.get('instance'),
+									title="Welcome to Next Neighbour!!",
+									message="Thanks for signing up!")
 
-class Notification(models.Model):
-    userid = models.ForeignKey('Users', db_column='userid')
-    scopeid = models.ForeignKey('Scope', db_column='scopeid')
-    startdate = models.DateTimeField(blank=True, null=True)
-    enddate = models.DateTimeField()
 
-    class Meta:
-        managed = False
-        db_table = 'notification'
-        unique_together = (('userid', 'scopeid', 'enddate'),)
 
 
 
