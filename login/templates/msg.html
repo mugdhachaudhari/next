@@ -47,40 +47,34 @@
 			}
 		#text {
 		text-align:left;
-		margin-right:300px;
+		margin-left:10px;
 		}
-	</style>
-	<p id="p"> </p>
-	<div id="header">
-		<h2><em>Friend Feeds</em></h2>
-	</div>
-	<p id="p">    </p>
-	<div id="table">
-	{% if row %}
-	<table border="0" align="center">
-		{% for v in row %}
-		 {% with i as "0" %}
-		 <p hidden>i = {{v.0}}</p>
-		<p style="text-align:left"><h3><font color="black"><button style="float:right;margin-right:200px" value={{v.0}} onclick="func(this)">{{v.1}}</button></font></h3></p></br>
-		<script>
-		function func(objButton)
-		{
-		var x = objButton.value;
-		document.cookie= x;
-		window.location="/togo/" + x;
+		#text1 {
+		text-align:left;
+		margin-left:20px;
 		}
-		
-		</script>
+		#text1 {
+		text-align:left;
+		margin-left:40px;
+		}
+		</style>
+		<div id="header">
+		<h2><em>Messages</em></h2>
 		</div>
-		{% endwith %}
-		{% endfor %}
-	{% else %}
-		<p> OOPS!! no feeds to show.</p>
-	{% endif %}
-	</div>
-	<script>
-	function myfunc(this.id)
-	{this.id.disabled="true";}
-	</script>
+		<div id="table">
 	
+			{% if row %}
+			<table border="1" align="center" style="color:#880000;background-color:#B0B0B0" >
+			<tr><td><h3>Title</h3></td><td><h3>Message</h3></td><td><h3>PostedBy</h3></td></tr>
+				{% for v in row %}
+				
+					<tr><td><h3>{{v.0}}</h3></td><td><h3>{{v.3}}</h3></td><td><h3>{{v.1}}{{v.2}}</h3></td></tr>
+			
+				{% endfor %}
+			</table>
+			{% else %}
+				<h2> no data </h2>
+			{% endif %}
+			</div>
+		</html>
 {% endblock %}

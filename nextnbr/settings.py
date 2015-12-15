@@ -112,7 +112,7 @@ WSGI_APPLICATION = 'nextnbr.wsgi.application'
 DATABASES = {
     'default': {
 		'ENGINE' : 'django.db.backends.oracle',
-		'NAME' : 'localhost:1521/pdb1',
+		'NAME' : 'localhost:1521/pdborcl',
 		'USER' : 'nextnbr',
 		'PASSWORD' : 'Passw0rd',
 		#'HOST' : 'localhost',
