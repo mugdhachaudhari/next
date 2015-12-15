@@ -45,29 +45,38 @@
 			padding:5px;
 			text-align:center;
 			}
-	#text{
-	margin-left:10px;}
-	</style>
-	<div id="header">
-			<h2><em>Neighbours</em></h2>
-	</div>
-	<div id="table">
-		{% if id %}
-		<table border="0" align="center" style="text-align:center; color:#880000">
-		<tr><td><h3>FirstName</h3></td><td><h3>LastName</h3></td></tr>
-		{% for v in id %}
-		<tr><td>{{v.1}}</td><td>{{v.2}}</td><td><button style="color:#880000;background-color:#B0B0B0;float:right;margin-right:250px" value={{v.1}} onclick="func(this)">View Profile</button></td></tr>
-		
-		{% endfor %}
-		{% else %}
-			<p><h3><font color="black">OOPS!!!You have no neighbours.</font></h3></p>
-		{% endif %}
-		<h3><font color="black"><a href="/homepage/">goback</a>
-	</div>
-	<script>
-	function func(objButton){
-	var x = objButton.value;
-		document.cookie= x;
-		window.location="/viewfrndprofile/" + x;}
-	</script>
+		#text {
+		text-align:left;
+		margin-left:10px;
+		}
+		#text1 {
+		text-align:left;
+		margin-left:20px;
+		}
+		#text1 {
+		text-align:left;
+		margin-left:40px;
+		}
+		</style>
+		<div id="header">
+		<h2><em>Messages</em></h2>
+		</div>
+		<div id="table">
+	
+			{% if row %}
+			<table border="1" align="center" style="text-align:center; color:#880000">
+			<tr><td><h3>Title</h3></td><td><h3>Message</h3></td><td><h3>PostedBy</h3></td></tr>
+				{% for v in row %}
+				
+					<tr><td>{{v.0}}</td><td>{{v.3}}</td><td>{{v.1}}{{v.2}}</td></tr>
+			
+			</table>
+				
+			
+				{% endfor %}
+			{% else %}
+				<h2> no data </h2>
+			{% endif %}
+			</div>
+		</html>
 {% endblock %}

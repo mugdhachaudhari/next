@@ -72,25 +72,14 @@
 			background-color:#880000;
 			text-decoration: none;
 				}
-			#search {
-			margin-top:10px;
-			text-align:left;
-			}
 			
 			</style>
 		</head>
 		<body>
 
 		<div id="header">
-			<h1><em>Here's your news feed {{userid}}</em></h1>
-			<div id="search">
-				
-			</div>
+			<h1><em>Welcome to Next Neighbour {{userid}}</em></h1>
 			<div id="tag">
-				<div id="search">
-					Search:<input type="text" name="searchtext">&nbsp&nbsp&nbsp
-					<input type="submit" value="search">
-				</div>
 				<a href="/friends/" target="content">Friends</a>&nbsp&nbsp
 				<a href="/neighbours/">Neighbours</a>&nbsp&nbsp
 				<a href="/blocks/">Blocks</a>&nbsp&nbsp
@@ -104,10 +93,10 @@
 				<h3><a href="/friendthreads/" target="content">Friend Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="blockthreads" target="content">Block Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="neighbourhoodthreads" target="content">Neighbourhood Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="neighbourthreads" target="content">Neighbour Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="allthreads" target="content">All Feeds</a><br></h3>
 			</div>
 		<div id="section">
-			<a href="/friendfeeds/" target="content">Friend Feeds</a>
+			<h3><em> The threads are:</em></h3>
 			{% if row %}
 				{% for v in row %}
-					<p>{{v.2}}{{v.3}}<button  style="float:right;margin-right:250px" value={{v.0}} onclick="func(this)">Reply</button></p>
+					<p><h3><font color="black">{{v.1}}<button style="color:#880000;background-color:#B0B0B0;float:right;margin-right:350px" value={{v.0}} onclick="func(this)">View</button><button style="color:#880000;background-color:#B0B0B0;float:right;margin-right:350px" value={{v.0}} onclick="func1(this)">Reply</button></h3></p>
 					<br>
 				{% endfor %}
 			{% else %}
@@ -116,6 +105,12 @@
 		</div>
 			<script>
 		function func(objButton)
+		{
+		var x = objButton.value;
+		document.cookie= x;
+		window.location="/msg/" + x;
+		}
+		function func1(objButton)
 		{
 		var x = objButton.value;
 		document.cookie= x;

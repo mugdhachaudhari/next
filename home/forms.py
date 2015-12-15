@@ -18,11 +18,11 @@ from django.utils.translation import ugettext_lazy as _
 #	)
  
 class MessageForm(forms.Form):
-	choice = forms.ChoiceField(choices = [("f","a friend"),
-										("n","a neighbour"),
-										("b","block"),
-										("ne","neighbourhood"),
-										("a","all friends")],
+	choice = forms.ChoiceField(choices = [("F","a friend"),
+										("E","a neighbour"),
+										("B","block"),
+										("N","neighbourhood"),
+										("R","all friends")],
 									widget=forms.Select(), required = True)
 	#username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=_("Username"), error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") })
 	#title = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=50, render_value=True)), label=_("Title"))
@@ -33,6 +33,11 @@ class NewmessageForm(forms.Form):
 	username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=_("Username"), error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") })
 	title = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=50, render_value=True)), label=_("Title"))
 	textbody = forms.CharField(widget=forms.Textarea(attrs=dict(required=True, max_length=500, render_value=True)), label=_("Textbody"))
+	def save(self):
+		u = messages.objects.get(title = self.cleaned_data['title'])
+		u.textbody = self.clean_data['textbody']
+		u.save()
+		return u
 	
 	
 class NewmessagesForm(forms.Form):
