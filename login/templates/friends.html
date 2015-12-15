@@ -53,13 +53,23 @@
 	</div>
 	<div id="table">
 		{% if id %}
+		<table border="0" align="center" style="text-align:center; color:#880000">
+		<tr><td><h3>FirstName</h3></td><td><h3>LastName</h3></td></tr>
 		{% for v in id %}
-		<div id="text">
-			<p><h3><font color="black">&nbsp&nbsp&nbsp&nbsp{{v.1}}&nbsp&nbsp&nbsp{{v.2}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="" style="float:right;margin-right:250px">View Profile</a></p>
-		</div>
+		<tr><td>{{v.2}}</td><td>{{v.3}}</td><td><button style="color:#880000;background-color:#B0B0B0;float:right;margin-right:250px" value={{v.1}} onclick="func(this)">View Profile</button></td></tr>
+		<br>
 		{% endfor %}
+		</table>
 		{% else %}
 			<p><h3><font color="black">OOPS!! You have no friends.</font></h3></p>
 		{% endif %}
+		<br>
+		<h3><font color="black"><a href="/homepage/"> goback</a>
 	</div>
+		<script>
+	function func(objButton){
+	var x = objButton.value;
+		document.cookie= x;
+		window.location="/viewfrndprofile/" + x;}
+	</script>
 {% endblock %}

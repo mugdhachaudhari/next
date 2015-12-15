@@ -34,8 +34,9 @@ def viewownprofile(request):
 @login_required
 def viewfrndprofile(request, x):
 #     filename = "C:\Users\Vasundhara Patil\Documents\GitHub\next\media\uploaded_files\ab1_1449302455_874656_Frozen_Queen_Elsa_Wallpaper.jpg"
-    prfl = x.profile
-    return render_to_response('viewprofile.html',{ 'user': x, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
+	u = User.objects.get(id = x)
+	prfl = u.profile
+	return render_to_response('viewprofile.html',{ 'user': x, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
 
 
 def profile(request):
