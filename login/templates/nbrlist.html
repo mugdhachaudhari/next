@@ -56,13 +56,29 @@
 	<p id="p">  </p>
 	<div id="table">
 	{% if row %}
-<table border="0" cellspacing = "10" >
+		<table border="0" align="center" style="text-align:center; color:#880000">
+		<tr><th><h2><font color="#880000">UserName</font></h2></th>
+		<th><h2><font color="#880000">FirstName</font></h2></th>
+		<th><h2><font color="#880000">LastName</font></h2></th></tr>
 		{% for v in row %}
 		<div id="text">
-		<tr><td hidden >{{v.0}}</td><td>{{v.1}}</td><td>{{ v.2 }}</td><td><button  style = "float:right" value={{v.0}} onclick="func(this)">Send Request</button></td></tr>
-		
+			<tr><td><h3><font color="black">{{v.3}}</font></h3></td>
+		<td><h3><font color="black">{{v.1}}</font></h3></td>
+		<td><h3><font color="black">{{v.2}}</font></h3></td>
+		<td><h3><font color="black">
+		<button  style="color:black;background-color:#B0B0B0;" 
+		value={{v.0}} onclick="func(this)">Send Request</button></font></h3></td></tr>
+		<br>
 		</div>
-		<script>
+
+		{% endfor %}
+		</table>
+	{% else %}
+		<p> no display</p>
+	{% endif %}
+			<h3><font color="black"><a href="/homepage/"> goback</a>
+	</div>
+			<script>
 		function func(objButton)
 		{
 		var x = objButton.value;
@@ -70,12 +86,5 @@
 		window.location="/addnbr/" + x;
 		}
 		</script>
-		{% endfor %}
-		</table>
-	{% else %}
-		<p> no display</p>
-	{% endif %}
-	</div>
-	
 	
 {% endblock %}

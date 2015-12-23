@@ -61,9 +61,11 @@
 			<h1>Create New Message</h1>
 		</div>
 		<div id="table">
-			<form method="post" action=".">{% csrf_token %}
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+			<form method="post" action="." >{% csrf_token %}
 				<table border="0">
 					{{ form.as_table }}
+					{{ form.media }}
 				</table>
 				<input  type="submit" value="next"/>
 		</div>

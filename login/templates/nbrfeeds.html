@@ -46,29 +46,33 @@
 			text-align:center;
 			}
 		#text {
+		text-align:left;
+		margin-left:10px;
 		}
-	</style>
-	<div id="header">
-		<h2><em>Blocks</em></h2>
-	</div>
-	<p id="p">    </p>
-	<div id="table">
-	{% if row %}
-		{% for v in row %}
-		 {% with i as "0" %}
-		 
-		<div id="text">
-		<p style="float:left"><h3><font color="black">{{v.0}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{v.1}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button id='{{ v.0 }}' name='id' style="float:right;margin-right:250px"onclick="myfunc(this.id)">SendRequest</button></font></h3></p>
+		#text1 {
+		text-align:left;
+		margin-left:20px;
+		}
+		#text1 {
+		text-align:left;
+		margin-left:40px;
+		}
+		</style>
+		<div id="header">
+		<h2><em>Neighbour feed messages</em></h2>
 		</div>
-		{% endwith %}
-		{% endfor %}
-	{% else %}
-		<p> no display</p>
-	{% endif %}
-	</div>
-	<script>
-	function myfunc(this.id)
-	{this.id.disabled="true";}
-	</script>
-	
+		<div id="table">
+		<table  border="0" align="center" style="color:#880000;background-color:#B0B0B0">
+			{% if row %}
+			<tr><th>Title</th><th>Message</th><th>PostedBy</th></tr>
+			{% for v in row %}
+					<tr><td>{{v.0}}</td><td>{{v.3}}</td><td>{{v.4}}</td></tr>
+			{% endfor %}
+			</table>
+			{% else %}
+				<h2> no data </h2>
+			{% endif %}
+<h3><font color="black"><a href="/neighbourthreads/"> goback</a>
+			</div>
+		</html>
 {% endblock %}

@@ -297,7 +297,7 @@ def sendblkreq(request,x):
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
 	result = cursor.callproc('blockrequest', [m,x, err_cd, err_msg])
-	return HttpResponse(result[2])
+# 	return HttpResponse(result[2])
 	if result[2] == '0':
 		msg = 'Block request sent'
 #         return HttpResponse(row)
@@ -306,8 +306,18 @@ def sendblkreq(request,x):
 	return render_to_response('template2.html', {'msg' : msg})
 
 	
-def unjoinblkreq(request):
-	return HttpResponse('Need to complete this functionality')	
+def unjoinblkreq(request, x):
+	cursor = connection.cursor()
+	m = request.session['userid']
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	result = cursor.callproc('unjoinblk', [m, err_cd, err_msg])
+	if result[1] == '0':
+		msg = 'Unjoin request completed'
+#         return HttpResponse(row)
+	else:
+		msg = 'Error in completing your request'
+	return render_to_response('template2.html', {'msg' : msg})
 	
 def declinefrndreq(request,x):
 	cursor = connection.cursor()
@@ -351,9 +361,14 @@ def newmsg(request):
 		username = request.POST['username']
 		title = request.POST['title']
 		textbody = request.POST['textbody']
+		if request.POST['loccord_0']:
+			loccord  = request.POST['loccord_0']  + "," +  request.POST['loccord_1']
+		else:
+			loccord = None
 		request.session['uname']=username
 		request.session['title']=title
 		request.session['text']=textbody
+		request.session['loccord']=loccord
 		#return HttpResponse(user)
 		#choice = request.POST['choice']
 		if form.is_valid:
@@ -388,7 +403,10 @@ def message(request):
 	if result[3] == '3':
 		return render_to_response('error.html',{'err_msg':err_msg})
 	else:
-		return HttpResponse("You cant send message to this user!!!!!SORRY(your are neither friends or neighbours with th mentioned user")
+		msg = 'You cant send message to this user!!!!!SORRY(your are neither friends or neighbours with the mentioned user'
+		html = "<html><body>ERROR %s. <a href='/homepage/'>Home</a></body></html>" % msg
+		return HttpResponse(html)
+
 	
 	
 def newms(request):
@@ -396,6 +414,11 @@ def newms(request):
 		form = NewmessagesForm(request.POST)
 		title = request.POST['title']
 		textbody = request.POST['textbody']
+		if request.POST['loccord_0']:
+			loccord  = request.POST['loccord_0']  + "," +  request.POST['loccord_1']
+		else:
+			loccord = None
+		request.session['loccord']=loccord
 		request.session['title'] = title
 		request.session['textbody'] = textbody
 		return HttpResponseRedirect('/blknbrmsg/')
@@ -412,18 +435,19 @@ def newms(request):
 	
 	
 def blknbrmsg(request):
-	choice = request.session['choice']
+	choice = request.session['ch']
 	cursor = connection.cursor()
 	#return HttpResponse(choice)
 	m = request.session['userid']
 	title = request.session['title']
 	textbody = request.session['textbody']
-	n = "NULL"
+	loccord = request.session['loccord']
+	n = None
 	#return HttpResponse(m)
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
-	result = cursor.callproc('newmsg', [m,title,textbody,choice,n, err_cd, err_msg])
-	return HttpResponse(result[6])
+	result = cursor.callproc('newmsg', [m,title,textbody,choice,n, loccord, err_cd, err_msg])
+# 	return HttpResponse(result[6])
 	if result[5] == '0':
 		return render_to_response('newbnmsgsent.html')
 	else:
@@ -442,11 +466,12 @@ def newestmessage(request):
 	username = request.session['uname']
 	title = request.session['title']
 	textbody = request.session['text']
+	loccord = request.session['loccord']
 	#return HttpResponse(m)
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
 	frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
-	result = cursor.callproc('newmsg', [m,title,textbody,choice,username, err_cd, err_msg])
+	result = cursor.callproc('newmsg', [m,title,textbody,choice,username, loccord, err_cd, err_msg])
 	#return HttpResponse(result[5])
 	if result[5] == '0':
 		return render_to_response('newmsgsent.html')
@@ -476,6 +501,12 @@ def reply(request,x):
 		form = NewmessagesForm(request.POST)
 		title = request.POST['title']
 		textbody = request.POST['textbody']
+
+		if request.POST['loccord_0']:
+			loccord  = request.POST['loccord_0']  + "," +  request.POST['loccord_1']
+		else:
+			loccord = None
+		request.session['loccord']=loccord
 		#return HttpResponse(textbody)
 		request.session['title']=title
 		request.session['text']=textbody
@@ -498,11 +529,12 @@ def replymessage(request):
 	x = request.session['x']
 	title = request.session['title']
 	textbody = request.session['text']
+	loccord = request.session['loccord']
 	#return HttpResponse(request.session['title'])
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
 	frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
-	result = cursor.callproc('replymsg', [x,m,title,textbody, err_cd, err_msg])
+	result = cursor.callproc('replymsg', [x,m,title,textbody, loccord, err_cd, err_msg])
 	#return HttpResponse(result[1])
 	if result[4] == '0':
 		return render_to_response('replymsgsent.html')
@@ -598,6 +630,7 @@ def friendthreads(request):
 	#return HttpResponse(result[1])
 	if result[2] == '0':
 		row = result[1].fetchall()
+# 		return HttpResponse(row)
 	else:
 		response = HttpResponse()
 		response.write(result[2])
@@ -723,7 +756,7 @@ def to(request,x):
 		response.write(" ")
 		response.write(result[4])
 		row=''
-	return render_to_response('to.html',{'row':row,'x':x})
+	return render_to_response('nbrfeeds.html',{'row':row,'x':x})
 	
 	
 def go(request,x):

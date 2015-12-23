@@ -54,9 +54,16 @@
 	<div id="table">
 		{% if id %}
 		<table border="0" align="center" style="text-align:center; color:#880000">
-		<tr><td><h3>FirstName</h3></td><td><h3>LastName</h3></td></tr>
+		<tr><th><h2><font color="#880000">UserName</font></h2></th>
+		<th><h2><font color="#880000">FirstName</font></h2></th>
+		<th><h2><font color="#880000">LastName</font></h2></th></tr>
 		{% for v in id %}
-		<tr><td>{{v.2}}</td><td>{{v.3}}</td><td><button style="color:#880000;background-color:#B0B0B0;float:right;margin-right:250px" value={{v.0}} onclick="func(this)">View Profile</button></td></tr>
+		<tr><td><h3><font color="black">{{v.3}}</font></h3></td>
+		<td><h3><font color="black">{{v.1}}</font></h3></td>
+		<td><h3><font color="black">{{v.2}}</font></h3></td>
+		<td><h3><font color="black">
+		<button  style="color:black;background-color:#B0B0B0;" 
+		value={{v.0}} onclick="func(this)">View Profile</button></font></h3></td></tr>
 		<br>
 		{% endfor %}
 		</table>

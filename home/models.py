@@ -3,7 +3,18 @@ from django.db import models
 from django.db import connection
 from django.contrib.auth.models import User
 from profileapp.models import UserProfile
+from geoposition.fields import GeopositionField
+from geoposition import Geoposition
 
+
+
+class Messages(models.Model):
+	loccord = GeopositionField(blank = True)
+	
+	class Meta:
+		managed = False
+		db_table = 'messages'
+		
 
 
 # Create your models here.
