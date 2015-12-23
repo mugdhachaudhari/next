@@ -1,7 +1,4 @@
 {% block content %}
-	<?php
-	session_start()
-	?>
 	<html>
 	<style>
 	#table{
@@ -60,11 +57,10 @@
 	<p id="p">    </p>
 	<div id="table">
 	{% if row %}
+	<table border="1" align="center" style="color:#880000;blackground-color:#B0B0B0">
 		{% for v in row %}
 		 {% with i as "0" %}
-		 <p hidden>i = {{v.0}}</p>
-		<div id="text">
-		<p style="text-align:left"><h3><font color="black"><button style="float:right;margin-right:200px" value={{v.0}} onclick="func(this)">{{v.1}}</button></font></h3></p></br>
+		 <tr><td><h3>{{v.1}}</h3></td><td><button style="float:right;margin-right:200px" value={{v.0}} onclick="func(this)">view</button></td></tr>
 		<script>
 		function func(objButton)
 		{

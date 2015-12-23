@@ -62,18 +62,12 @@
 		<h2><em>Friend feed messages</em></h2>
 		</div>
 		<div id="table">
-	
+		<table  border="1" align="center" style="color:#880000;background-color:#B0B0B0">
 			{% if row %}
-			<div id="text">
-			<h2><p><h3><font color="white"><em>Title&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspMessage&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspPostedBy</h2></font></p>
-			</div>
-				{% for v in row %}
-				<div id="text">
-					<h2><p><h3><font color="black">{{v.0}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{v.3}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{v.1}}&nbsp&nbsp&nbsp{{v.2}}</h2></font></p>
-			</div>
-				</div>
-			
-				{% endfor %}
+			<tr><td><h3>Title</h3></td><td><h3>Message</h3></td><td><h3>PostedBy</h3></td></tr>
+			{% for v in row %}
+					<tr><td>{{v.0}}</td><td>{{v.3}}</td><td>{{v.1}}{{v.2}}</td></tr>
+			{% endfor %}
 			{% else %}
 				<h2> no data </h2>
 			{% endif %}
