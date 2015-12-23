@@ -55,21 +55,27 @@
 	</div>
 	<p id="p">    </p>
 	<div id="table">
-		 
-		<div id="text">
+{% if row %}
 <table border="0" cellspacing = "10" >
-	<tr>{{row}}</td><td><button  style = "float:right" value={{v.0}} onclick="func(this)">Unjoin</button></td></tr>
+		{% for v in row %} 
+		<div id="text">
+	<tr><td hidden >{{v.bid}}</td><td>{{v.blkdesc}}</td><td>{{ v.nec }}</td><td>{{ v.swc }}</td><td><button  style = "float:right" value={{v.bid}} onclick="func(this)">Send Request</button></td></tr>
+</div>
 
-</table>
+	{% endfor %}
+	</table>
+	{% else %}
+		<p> no display</p>
+	{% endif %}
 		</div>
 		
 	<h3><font color="black"><a href="/homepage/">goback</a>
-	</div>
+
 	<script>
 	function func(objButton){
 	var x = objButton.value;
 		document.cookie= x;
-		window.location="/unjoinblkreq/" + x;}
+		window.location="/sendblkreq/" + x;}
 	</script>
 	
 {% endblock %}

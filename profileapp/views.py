@@ -36,7 +36,7 @@ def viewfrndprofile(request, x):
 #     filename = "C:\Users\Vasundhara Patil\Documents\GitHub\next\media\uploaded_files\ab1_1449302455_874656_Frozen_Queen_Elsa_Wallpaper.jpg"
 	u = User.objects.get(id = x)
 	prfl = u.profile
-	return render_to_response('viewprofile.html',{ 'user': x, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
+	return render_to_response('viewprofile.html',{ 'user': u, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
 
 
 def profile(request):
@@ -122,7 +122,7 @@ def profile(request):
 # 			return HttpResponse(ext)
 			up_form.clean_photopath
 			up_form.save()
-			return HttpResponseRedirect('/home/')
+			return HttpResponseRedirect('/homepage/')
 		else:
 			msg = 'Error in saving profile. Please enter correct details'
 			html = "<html><body>ERROR %s. <a href='/home/'>Home</a></body></html>" % msg

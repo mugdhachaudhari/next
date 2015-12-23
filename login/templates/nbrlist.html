@@ -45,31 +45,37 @@
 			padding:5px;
 			text-align:center;
 			}
-			#text{
+	#text{
 	margin-left:100px;}
 	#button{
 	margin-left:200px;}
 	</style>
 	<div id="header">
-		<h2><em>Blocks</em></h2>
+		<h2><em>List of all users</em></h2>
 	</div>
-	<p id="p">    </p>
+	<p id="p">  </p>
 	<div id="table">
-		 
-		<div id="text">
+	{% if row %}
 <table border="0" cellspacing = "10" >
-	<tr>{{row}}</td><td><button  style = "float:right" value={{v.0}} onclick="func(this)">Unjoin</button></td></tr>
-
-</table>
-		</div>
+		{% for v in row %}
+		<div id="text">
+		<tr><td hidden >{{v.0}}</td><td>{{v.1}}</td><td>{{ v.2 }}</td><td><button  style = "float:right" value={{v.0}} onclick="func(this)">Send Request</button></td></tr>
 		
-	<h3><font color="black"><a href="/homepage/">goback</a>
-	</div>
-	<script>
-	function func(objButton){
-	var x = objButton.value;
+		</div>
+		<script>
+		function func(objButton)
+		{
+		var x = objButton.value;
 		document.cookie= x;
-		window.location="/unjoinblkreq/" + x;}
-	</script>
+		window.location="/addnbr/" + x;
+		}
+		</script>
+		{% endfor %}
+		</table>
+	{% else %}
+		<p> no display</p>
+	{% endif %}
+	</div>
+	
 	
 {% endblock %}
