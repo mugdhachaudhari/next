@@ -57,13 +57,13 @@ def msg(request,x):
 	showcur = cursor.var(cx_Oracle.CURSOR).var
 	result = cursor.callproc('allfeeds', [m,x,showcur, err_cd, err_msg])
 	#return HttpResponse(result[2])
-	if result[2] == '0':
-		row = result[1].fetchall()
+	if result[3] == '0':
+		row = result[2].fetchall()
 	else:
 		response = HttpResponse()
-		response.write(result[2])
-		response.write(" ")
 		response.write(result[3])
+		response.write(" ")
+		response.write(result[4])
 		row=''
 	return render_to_response('msg.html',{'row':row,'user': request.user})
 
@@ -84,6 +84,8 @@ def ho(request):
     'ho.html',
     { 'user': request.user }
     )
+
+	
 
 	
 def allfeeds(request):
@@ -270,65 +272,43 @@ def messages(request):
 	if request.method == 'POST':
 		form = MessageForm(request.POST)
 		choice = request.POST['choice']
-		request.session['choice']=choice
-		if choice == 'E' or choice == 'R':
-			#if request.method == 'POST':
-				#form = NewmessageForm()
-				
-				#if form.is_valid:
-					#choice = request.POST['choice']
-					#variables = RequestContext(request, {
-	#'form': form,
-	#})
-					#return render_to_response(
-	#'msgsuccess.html',
-	#variables,
-	#)				
-					
-			request.session['choice'] = choice 
-					
-			HttpResponseRedirect("/newmsg/")
-			
+		#return HttpResponse(choice)
+		request.session['ch'] = choice
+		if choice == 'R' or choice == 'E':
+			return HttpResponseRedirect("/newmsg/")
+		else:
+			return HttpResponseRedirect("/newms/")
+		
 	else:
-		form = NewmessageForm()
-				
+		form = MessageForm()
 	variables = RequestContext(request, {
-				'form': form,
-			})
+	'form': form,
+	})
 	return render_to_response(
 	'msgsuccess.html',
 	variables,
 	)
-			#return HttpResponseRedirect("/newmsg/")
-			
-		
-	#else:
-	#	form = MessageForm()
-	#variables = RequestContext(request, {
-	#'form': form,
-	#})
-	#return render_to_response(
-	#'msgsuccess.html',
-	#variables,
-	# )
 	
 def newmsg(request):
+	error = request.session['ch']
 	if request.method == 'POST':
 		form = NewmessageForm(request.POST)
+		username = request.POST['username']
+		title = request.POST['title']
+		textbody = request.POST['textbody']
+		request.session['uname']=username
+		request.session['title']=title
+		request.session['text']=textbody
+		#return HttpResponse(user)
 		#choice = request.POST['choice']
-		#return HttpResponse(choice)
 		if form.is_valid:
-			form.save()
-			
-		#request.GET.get('choice')
-		return HttpResponseRedirect('/message/')
+			#form.save()
+			return HttpResponseRedirect('/message/')
 	else:
-		return HttpResponse(request.session['choice'])
 		form = NewmessageForm()
-		choice = request.session['choice']
 		
 	variables = RequestContext(request, {
-	'form': form,'choice':choice
+	'form': form
 	})
 
 	return render_to_response(
@@ -336,29 +316,34 @@ def newmsg(request):
 	variables,
 	)
 	
-# def message(request):
-	# if request.method == 'POST':
-		# form = MessageForm(request.POST)
-		# #choice = request.POST['choice']
-		# if choice == 'f' or choice == 'n':
-			# return HttpResponseRedirect("/newmsg/")
-		# else:
-			# return HttpResponseRedirect("/newms/")
-		
-	# else:
-		# form = MessageForm()
-	# variables = RequestContext(request, {
-	# 'form': form,
-	# })
-	# return render_to_response(
-	# 'msgsuccess.html',
-	# variables,
-	# )
+def message(request):
+	choice = request.session['ch']
+	username = request.session['uname']
+	title = request.session['title']
+	textbody = request.session['text']
+	cursor = connection.cursor()
+	m = request.session['userid']
+	#return HttpResponse(m)
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	result = cursor.callproc('chkfrndnbr', [m,username,choice,err_cd, err_msg])
+	#return HttpResponse(result[3])
+	if result[3] == '2':
+		return HttpResponseRedirect('/newestmessage/')
+	if result[3] == '3':
+		return render_to_response('error.html',{'err_msg':err_msg})
+	else:
+		return HttpResponse("You cant send message to this user!!!!!SORRY(your are neither friends or neighbours with th mentioned user")
+	
 	
 def newms(request):
 	if request.method == 'POST':
 		form = NewmessagesForm(request.POST)
-		return HttpResponseRedirect('/messages.html/')
+		title = request.POST['title']
+		textbody = request.POST['textbody']
+		request.session['title'] = title
+		request.session['textbody'] = textbody
+		return HttpResponseRedirect('/blknbrmsg/')
 	else:
 		form = NewmessagesForm()
 	variables = RequestContext(request, {
@@ -369,6 +354,54 @@ def newms(request):
 	'messages.html',
 	variables,
 	)
+	
+	
+def blknbrmsg(request):
+	choice = request.session['choice']
+	cursor = connection.cursor()
+	#return HttpResponse(choice)
+	m = request.session['userid']
+	title = request.session['title']
+	textbody = request.session['textbody']
+	n = "NULL"
+	#return HttpResponse(m)
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	result = cursor.callproc('newmsg', [m,title,textbody,choice,n, err_cd, err_msg])
+	return HttpResponse(result[6])
+	if result[5] == '0':
+		return render_to_response('newbnmsgsent.html')
+	else:
+		response = HttpResponse()
+		response.write(result[5])
+		response.write(" ")
+		response.write(result[6])
+		row=''
+	return render_to_response('newbnmsgsent.html')
+	
+def newestmessage(request):
+	cursor = connection.cursor()
+	choice = request.session['ch']
+	#return HttpResponse(choice)
+	m = request.session['userid']
+	username = request.session['uname']
+	title = request.session['title']
+	textbody = request.session['text']
+	#return HttpResponse(m)
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
+	result = cursor.callproc('newmsg', [m,title,textbody,choice,username, err_cd, err_msg])
+	#return HttpResponse(result[5])
+	if result[5] == '0':
+		return render_to_response('newmsgsent.html')
+	else:
+		response = HttpResponse()
+		response.write(result[5])
+		response.write(" ")
+		response.write(result[6])
+		row=''
+	return render_to_response('newmsgsent.html')
 	
 def frequest(request,x):
 	cursor = connection.cursor()
@@ -382,40 +415,82 @@ def frequest(request,x):
 	#return HttpResponse(result[2])
 	
 	
-def replymsg(request,x):
-	cursor = connection.cursor()
-	m = request.session['userid']
-	#return HttpResponse(m)
-	err_cd = cursor.var(cx_Oracle.NUMBER).var
-	err_msg = cursor.var(cx_Oracle.STRING).var
-	frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
-	result = cursor.callproc('replymsg', [x,m,frndthreadcur, err_cd, err_msg])
-	#return HttpResponse(result[1])
-	if result[2] == '0':
-		row = result[1].fetchall()
-	else:
-		response = HttpResponse()
-		response.write(result[2])
-		response.write(" ")
-		response.write(result[3])
-		row=''
-	return render_to_response('.html',{'row':row})
-	
-	
-def reply(request):
+def reply(request,x):
+	request.session['x']=x
 	if request.method == 'POST':
 		form = NewmessagesForm(request.POST)
-		return HttpResponseRedirect('/messages.html/')
+		title = request.POST['title']
+		textbody = request.POST['textbody']
+		#return HttpResponse(textbody)
+		request.session['title']=title
+		request.session['text']=textbody
+			#form.save()
+		return HttpResponseRedirect('/replymessage/')
 	else:
 		form = NewmessagesForm()
 	variables = RequestContext(request, {
 	'form': form,
 	})
- 
 	return render_to_response(
-	'messages.html',
+	'reply.html',
 	variables,
 	)
+	
+	
+def replymessage(request):
+	cursor = connection.cursor()
+	m = request.session['userid']
+	x = request.session['x']
+	title = request.session['title']
+	textbody = request.session['text']
+	#return HttpResponse(request.session['title'])
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
+	result = cursor.callproc('replymsg', [x,m,title,textbody, err_cd, err_msg])
+	#return HttpResponse(result[1])
+	if result[4] == '0':
+		return render_to_response('replymsgsent.html')
+	else:
+		response = HttpResponse()
+		response.write(result[4])
+		response.write(" ")
+		response.write(result[5])
+		row=''
+	return render_to_response('replymsgsent.html')
+	# cursor = connection.cursor()
+	# m = request.session['userid']
+	# #return HttpResponse(m)
+	# err_cd = cursor.var(cx_Oracle.NUMBER).var
+	# err_msg = cursor.var(cx_Oracle.STRING).var
+	# frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
+	# result = cursor.callproc('replymsg', [x,m,frndthreadcur, err_cd, err_msg])
+	# #return HttpResponse(result[1])
+	# if result[2] == '0':
+		# row = result[1].fetchall()
+	# else:
+		# response = HttpResponse()
+		# response.write(result[2])
+		# response.write(" ")
+		# response.write(result[3])
+		# row=''
+	# return render_to_response('.html',{'row':row})
+	
+	
+#def reply(request):
+#	if request.method == 'POST':
+#		form = NewmessagesForm(request.POST)
+#		return HttpResponseRedirect('/messages.html/')
+#	else:
+#		form = NewmessagesForm()
+#	variables = RequestContext(request, {
+#	'form': form,
+#	})
+#
+#	return render_to_response(
+#	'messages.html',
+#	variables,
+#	)
 	
 	
 #def msgsuccess(request):
@@ -524,7 +599,7 @@ def neighbourhoodthreads(request):
 	err_msg = cursor.var(cx_Oracle.STRING).var
 	nbthreadcur = cursor.var(cx_Oracle.CURSOR).var
 	result = cursor.callproc('neighbourhoodthreads', [m,nbthreadcur, err_cd, err_msg])
-	#return HttpResponse(result[1])
+	#return HttpResponse(result[0])
 	if result[2] == '0':
 		row = result[1].fetchall()
 	else:
