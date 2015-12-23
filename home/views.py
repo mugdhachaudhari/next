@@ -17,6 +17,8 @@ import cx_Oracle
 from nextnbr.settings import MEDIA_URL
 from decimal import Decimal
 from profileapp.models import UserProfile
+from home.models import Blockmembers
+
 # from django.contrib.gis.geos import polygon
 
 
@@ -26,6 +28,9 @@ from profileapp.models import UserProfile
 def homepage(request):
 	cursor = connection.cursor()
 	m = request.session['userid']
+	prfl = request.user.profile
+	if not prfl.firstname:
+		return HttpResponseRedirect('/accounts/profile/', {'alert' : True})
 	#return HttpResponse(m)
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
@@ -72,18 +77,13 @@ def msg(request,x):
 @login_required
 def home(request):
 	u = User.objects.get(username = request.user)
-	#m = request.session['userid']
-	#n = notification.objects.filter(user=request.user, viewed=False)
-	request.session['userid'] = u.id 
-	return render_to_response(
-	'frame.html',{ 'user': request.user})
+	request.session['userid'] = u.id
+	return render_to_response('frame.html',{ 'user': request.user})
 	
 @login_required
 def ho(request):
-    return render_to_response(
-    'ho.html',
-    { 'user': request.user }
-    )
+	prfl = request.user.profile
+	return render_to_response('ho.html',{ 'user': request.user, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
 
 	
 
@@ -151,11 +151,11 @@ def blocks(request):
 	result = cursor.callproc('showblocks', [m, err_cd, err_msg])
 	#return HttpResponse(result[2])
 	if result[1] == '1':
-		return render_to_response('blocks.html',{'row':row})
+		return render_to_response('blocks.html',{'row':result[2]})
 	if result[1] == '2':
-		return render_to_response('blocks.html',{'row':row})
+		return render_to_response('blocks.html',{'row':result[2]})
 	if result[1] == '3':
-		return render_to_response('blocks.html',{'row':row})
+		return render_to_response('blocks.html',{'row':result[2]})
 	if result[1] == '0':
 		lat = request.user.profile.loc.latitude
 		lng = request.user.profile.loc.longitude
@@ -170,12 +170,13 @@ def blocks(request):
 #         ry = range(ymax, ymin)
 			if lng >= xmax and lng <= xmin and lat >= ymax and lat <= ymin :
 				listblks.append(x)
+# 		return HttpResponse(listblks[0].bid)
 #     ne =nec.split(',')[0] request.user.profile.loc.latitude
 #     sw = request.user.profile.loc.longitude
 #     bbox = ("XMIN = " ,xmin," YMIN = ", ymin, " XMAX  = ", xmax, " YMAX ",  ymax)
 #     geom = Polygon.from_bbox(bbox)
 #     return HttpResponse(bbox)
-		return render_to_response('blocks.html',{'row':listblks})
+		return render_to_response('blocklist.html',{'row':listblks})
 		
 
 def friendrequest(request):
@@ -196,6 +197,37 @@ def friendrequest(request):
 		row=''
 	return render_to_response('friendrequest.html',{'row':row})
 	
+def addnbrlist(request):
+	cursor = connection.cursor()
+	m = request.session['userid']
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	blkmembrs = cursor.var(cx_Oracle.CURSOR).var
+	result = cursor.callproc('showblkmembers', [m,blkmembrs, err_cd, err_msg])
+	#return HttpResponse(result[1])
+	if result[2] == '0':
+		row = result[1].fetchall()
+	else:
+		response = HttpResponse()
+		response.write(result[2])
+		response.write(" ")
+		response.write(result[3])
+		row=''
+	return render_to_response('nbrlist.html',{'row':row})
+
+def addnbr(request,x):
+	cursor = connection.cursor()
+	m = request.session['userid']
+	#return HttpResponse(x)
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	result = cursor.callproc('addnbr', [m,x, err_cd, err_msg])
+	if result[2] == '0':
+		msg = 'Neighbour added'
+#         return HttpResponse(row)
+	else:
+		msg = 'Error in completing your request'
+	return render_to_response('template2.html', {'msg' : msg})
 	
 def notifications(request):
 	cursor = connection.cursor()
@@ -208,13 +240,15 @@ def notifications(request):
 	#return HttpResponse(result[1])
 	if result[2] == '0':
 		row = result[1].fetchall()
+		msg=''
 	else:
-		response = HttpResponse()
-		response.write(result[2])
-		response.write(" ")
-		response.write(result[3])
-		row=''
-	return render_to_response('notifications.html',{'row':row})
+# 		response = HttpResponse()
+# 		response.write(result[2])
+# 		response.write(" ")
+# 		response.write(result[3])
+		row = ''
+		msg='Error in displaying notifications'
+	return render_to_response('notifications.html',{'row':row, 'msg':msg})
 	
 	
 def acceptfrndreq(request,x):
@@ -222,20 +256,38 @@ def acceptfrndreq(request,x):
 	m = request.session['userid']
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
-	acceptcur = cursor.var(cx_Oracle.CURSOR).var
-	cursor.callproc('friendaccept', [m,x,'Y'])
-	return render_to_response('template1.html')
+	result = cursor.callproc('friendaccept', [x,m,'Y', err_cd, err_msg])
+	if result[3] == '0':
+		msg = 'Accept request completed'
+#         return HttpResponse(row)
+	else:
+		msg = 'Error in completing your request'
+	return render_to_response('template2.html', {'msg' : msg})
 	
 	
 	
 def acceptblkreq(request,x):
 	cursor = connection.cursor()
 	m = request.session['userid']
+	try:
+		cursor = connection.cursor()
+		cursor.execute("SELECT bid FROM blockmembers where userid = %s", [m])
+		bid = int(cursor.fetchone()[0])
+# 		return HttpResponse(bid[0])
+# 	return HttpResponse(row)
+	except:
+		msg = 'Error selecting BlockId'
+		html = "<html><body>ERROR %s. <a href='/homepage/'>Home</a></body></html>" % msg
+		return HttpResponse(html)
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
-	acceptcur = cursor.var(cx_Oracle.CURSOR).var
-	cursor.callproc('friendaccept', [m,x,'Y'])
-	return render_to_response('template1.html')
+	result = cursor.callproc('blockapproval', [x,bid,m,err_cd,err_msg ])
+	if result[3] == '0':
+		msg = 'Request completed'
+#         return HttpResponse(row)
+	else:
+		msg = 'Error in completing your request'
+	return render_to_response('template2.html', {'msg' : msg})
 	
 	
 def sendblkreq(request,x):
@@ -244,28 +296,41 @@ def sendblkreq(request,x):
 	#return HttpResponse(x)
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
-	blkcur = cursor.var(cx_Oracle.CURSOR).var
 	result = cursor.callproc('blockrequest', [m,x, err_cd, err_msg])
+# 	return HttpResponse(result[2])
 	if result[2] == '0':
-		row = result[1].fetchall()
+		msg = 'Block request sent'
+#         return HttpResponse(row)
 	else:
-		response = HttpResponse()
-		response.write(result[2])
-		response.write(" ")
-		response.write(result[3])
-		row=''
-	return render_to_response('template3.html',{'row':row})
+		msg = 'Error in completing your request'
+	return render_to_response('template2.html', {'msg' : msg})
+
 	
-	
+def unjoinblkreq(request, x):
+	cursor = connection.cursor()
+	m = request.session['userid']
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	result = cursor.callproc('unjoinblk', [m, err_cd, err_msg])
+	if result[1] == '0':
+		msg = 'Unjoin request completed'
+#         return HttpResponse(row)
+	else:
+		msg = 'Error in completing your request'
+	return render_to_response('template2.html', {'msg' : msg})
 	
 def declinefrndreq(request,x):
 	cursor = connection.cursor()
 	m = request.session['userid']
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
-	acceptcur = cursor.var(cx_Oracle.CURSOR).var
-	cursor.callproc('friendaccept', [m,x,'N'])
-	return render_to_response('template2.html')
+	result = cursor.callproc('friendaccept', [x, m, 'D', err_cd, err_msg])
+	if result[3] == '0':
+		msg = 'Decline request completed'
+#         return HttpResponse(row)
+	else:
+		msg = 'Error in completing your request'
+	return render_to_response('template2.html', {'msg' : msg})
 
 	
 def messages(request):
@@ -296,9 +361,14 @@ def newmsg(request):
 		username = request.POST['username']
 		title = request.POST['title']
 		textbody = request.POST['textbody']
+		if request.POST['loccord_0']:
+			loccord  = request.POST['loccord_0']  + "," +  request.POST['loccord_1']
+		else:
+			loccord = None
 		request.session['uname']=username
 		request.session['title']=title
 		request.session['text']=textbody
+		request.session['loccord']=loccord
 		#return HttpResponse(user)
 		#choice = request.POST['choice']
 		if form.is_valid:
@@ -333,7 +403,10 @@ def message(request):
 	if result[3] == '3':
 		return render_to_response('error.html',{'err_msg':err_msg})
 	else:
-		return HttpResponse("You cant send message to this user!!!!!SORRY(your are neither friends or neighbours with th mentioned user")
+		msg = 'You cant send message to this user!!!!!SORRY(your are neither friends or neighbours with the mentioned user'
+		html = "<html><body>ERROR %s. <a href='/homepage/'>Home</a></body></html>" % msg
+		return HttpResponse(html)
+
 	
 	
 def newms(request):
@@ -341,6 +414,11 @@ def newms(request):
 		form = NewmessagesForm(request.POST)
 		title = request.POST['title']
 		textbody = request.POST['textbody']
+		if request.POST['loccord_0']:
+			loccord  = request.POST['loccord_0']  + "," +  request.POST['loccord_1']
+		else:
+			loccord = None
+		request.session['loccord']=loccord
 		request.session['title'] = title
 		request.session['textbody'] = textbody
 		return HttpResponseRedirect('/blknbrmsg/')
@@ -357,18 +435,19 @@ def newms(request):
 	
 	
 def blknbrmsg(request):
-	choice = request.session['choice']
+	choice = request.session['ch']
 	cursor = connection.cursor()
 	#return HttpResponse(choice)
 	m = request.session['userid']
 	title = request.session['title']
 	textbody = request.session['textbody']
-	n = "NULL"
+	loccord = request.session['loccord']
+	n = None
 	#return HttpResponse(m)
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
-	result = cursor.callproc('newmsg', [m,title,textbody,choice,n, err_cd, err_msg])
-	return HttpResponse(result[6])
+	result = cursor.callproc('newmsg', [m,title,textbody,choice,n, loccord, err_cd, err_msg])
+# 	return HttpResponse(result[6])
 	if result[5] == '0':
 		return render_to_response('newbnmsgsent.html')
 	else:
@@ -387,11 +466,12 @@ def newestmessage(request):
 	username = request.session['uname']
 	title = request.session['title']
 	textbody = request.session['text']
+	loccord = request.session['loccord']
 	#return HttpResponse(m)
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
 	frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
-	result = cursor.callproc('newmsg', [m,title,textbody,choice,username, err_cd, err_msg])
+	result = cursor.callproc('newmsg', [m,title,textbody,choice,username, loccord, err_cd, err_msg])
 	#return HttpResponse(result[5])
 	if result[5] == '0':
 		return render_to_response('newmsgsent.html')
@@ -421,6 +501,12 @@ def reply(request,x):
 		form = NewmessagesForm(request.POST)
 		title = request.POST['title']
 		textbody = request.POST['textbody']
+
+		if request.POST['loccord_0']:
+			loccord  = request.POST['loccord_0']  + "," +  request.POST['loccord_1']
+		else:
+			loccord = None
+		request.session['loccord']=loccord
 		#return HttpResponse(textbody)
 		request.session['title']=title
 		request.session['text']=textbody
@@ -443,11 +529,12 @@ def replymessage(request):
 	x = request.session['x']
 	title = request.session['title']
 	textbody = request.session['text']
+	loccord = request.session['loccord']
 	#return HttpResponse(request.session['title'])
 	err_cd = cursor.var(cx_Oracle.NUMBER).var
 	err_msg = cursor.var(cx_Oracle.STRING).var
 	frndthreadcur = cursor.var(cx_Oracle.CURSOR).var
-	result = cursor.callproc('replymsg', [x,m,title,textbody, err_cd, err_msg])
+	result = cursor.callproc('replymsg', [x,m,title,textbody, loccord, err_cd, err_msg])
 	#return HttpResponse(result[1])
 	if result[4] == '0':
 		return render_to_response('replymsgsent.html')
@@ -543,6 +630,7 @@ def friendthreads(request):
 	#return HttpResponse(result[1])
 	if result[2] == '0':
 		row = result[1].fetchall()
+# 		return HttpResponse(row)
 	else:
 		response = HttpResponse()
 		response.write(result[2])
@@ -668,7 +756,7 @@ def to(request,x):
 		response.write(" ")
 		response.write(result[4])
 		row=''
-	return render_to_response('to.html',{'row':row,'x':x})
+	return render_to_response('nbrfeeds.html',{'row':row,'x':x})
 	
 	
 def go(request,x):
@@ -771,38 +859,38 @@ def logout_page(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-@login_required
-def home_1(request):
-#     filename = "C:\Users\Vasundhara Patil\Documents\GitHub\next\media\uploaded_files\ab1_1449302455_874656_Frozen_Queen_Elsa_Wallpaper.jpg"
-    u = User.objects.get(username = request.user)
-    request.session['userid'] = u.id
-    prfl = request.user.profile
-    if not prfl.firstname:
-        return HttpResponseRedirect('/accounts/profile/', {'alert' : True})
-#     image_name = "uploaded_files/Frozen_Queen_Elsa_Wallpaper.jpg"
-    return render_to_response('home_1.html',{ 'user': request.user, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
+# @login_required
+# def home_1(request):
+# #     filename = "C:\Users\Vasundhara Patil\Documents\GitHub\next\media\uploaded_files\ab1_1449302455_874656_Frozen_Queen_Elsa_Wallpaper.jpg"
+#     u = User.objects.get(username = request.user)
+#     request.session['userid'] = u.id
+#     prfl = request.user.profile
+#     if not prfl.firstname:
+#         return HttpResponseRedirect('/accounts/profile/', {'alert' : True})
+# #     image_name = "uploaded_files/Frozen_Queen_Elsa_Wallpaper.jpg"
+#     return render_to_response('home_1.html',{ 'user': request.user, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
 
 
-def blockrequest(request):
-    lat = request.user.profile.loc.latitude
-    lng = request.user.profile.loc.longitude
-    listblks = []
-    blks = Blocks.objects.all()
-    for x in blks:
-        ymax = Decimal(x.nec.split(',')[0])
-        xmax = Decimal(x.nec.split(',')[1])
-        ymin = Decimal(x.swc.split(',')[0])
-        xmin = Decimal(x.swc.split(',')[1])
-#         rx = range(xmax, xmin)
-#         ry = range(ymax, ymin)
-        if lng >= xmax and lng <= xmin and lat >= ymax and lat <= ymin :
-             listblks.append(x)
-#     ne =nec.split(',')[0] request.user.profile.loc.latitude
-#     sw = request.user.profile.loc.longitude
-#     bbox = ("XMIN = " ,xmin," YMIN = ", ymin, " XMAX  = ", xmax, " YMAX ",  ymax)
-#     geom = Polygon.from_bbox(bbox)
-#     return HttpResponse(bbox)
-    return HttpResponse(listblks)
+# def blockrequest(request):
+#     lat = request.user.profile.loc.latitude
+#     lng = request.user.profile.loc.longitude
+#     listblks = []
+#     blks = Blocks.objects.all()
+#     for x in blks:
+#         ymax = Decimal(x.nec.split(',')[0])
+#         xmax = Decimal(x.nec.split(',')[1])
+#         ymin = Decimal(x.swc.split(',')[0])
+#         xmin = Decimal(x.swc.split(',')[1])
+# #         rx = range(xmax, xmin)
+# #         ry = range(ymax, ymin)
+#         if lng >= xmax and lng <= xmin and lat >= ymax and lat <= ymin :
+#              listblks.append(x)
+# #     ne =nec.split(',')[0] request.user.profile.loc.latitude
+# #     sw = request.user.profile.loc.longitude
+# #     bbox = ("XMIN = " ,xmin," YMIN = ", ymin, " XMAX  = ", xmax, " YMAX ",  ymax)
+# #     geom = Polygon.from_bbox(bbox)
+# #     return HttpResponse(bbox)
+#     return HttpResponse(listblks)
 
 def search(request):
     if request.method == 'POST':

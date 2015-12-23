@@ -3,7 +3,10 @@
 import re
 from django import forms
 from django.contrib.auth.models import User
+from geoposition.fields import GeopositionField
+from geoposition import Geoposition
 # from login.models import Registration
+from home.models import Messages
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -29,17 +32,22 @@ class MessageForm(forms.Form):
 	#textbody = forms.CharField(widget=forms.Textarea(attrs=dict(required=True, max_length=500, render_value=True)), label=_("Textbody"))
 	
 	
-class NewmessageForm(forms.Form):
+class NewmessageForm(forms.ModelForm):
 	username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=_("Username"), error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") })
 	title = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=50, render_value=True)), label=_("Title"))
 	textbody = forms.CharField(widget=forms.Textarea(attrs=dict(required=True, max_length=500, render_value=True)), label=_("Textbody"))
+	class Meta:
+		model = Messages
+		fields = ('loccord',)
 	
 	
 	
-class NewmessagesForm(forms.Form):
+class NewmessagesForm(forms.ModelForm):
 	title = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=50, render_value=True)), label=_("Title"))
 	textbody = forms.CharField(widget=forms.Textarea(attrs=dict(required=True, max_length=500, render_value=True)), label=_("Textbody"))
-	
+	class Meta:
+		model = Messages
+		fields = ('loccord',)
 	
 	def save(self):
 		u = messages.objects.get(title = self.cleaned_data['title'])

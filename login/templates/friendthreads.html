@@ -59,9 +59,10 @@
 	{% if row %}
 	<table border="0" align="center">
 		{% for v in row %}
-		 {% with i as "0" %}
 		 <p hidden>i = {{v.0}}</p>
-		<tr><td><h3>{{v.1}}</h3></td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func(this)">view</button></td></tr>
+		<tr><td>{{v.1}}</td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func(this)">view</button></td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func1(this)">Reply</button></td></tr>
+			{% endfor %}
+		</table>
 		<script>
 		function func(objButton)
 		{
@@ -69,18 +70,25 @@
 		document.cookie= x;
 		window.location="/togo/" + x;
 		}
+		function func1(objButton)
+		{
+		var x = objButton.value;
+		document.cookie= x;
+		window.location="/reply/" + x;
+		}
 		
 		</script>
 		</div>
-		{% endwith %}
-		{% endfor %}
+
+	
 	{% else %}
 		<p> OOPS!! no feeds to show.</p>
 	{% endif %}
+			<h3><font color="black"><a href="/homepage/"> goback</a>
 	</div>
 	<script>
 	function myfunc(this.id)
 	{this.id.disabled="true";}
 	</script>
-	
+
 {% endblock %}

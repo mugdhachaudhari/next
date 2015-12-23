@@ -46,22 +46,34 @@
 			text-align:center;
 			}
 	#text{
-	margin-left:100px;}
-	#button{
-	margin-left:200px;}
+	margin-left:10px;}
 	</style>
 	<div id="header">
 		<h2><em>List of all users</em></h2>
 	</div>
-	<p id="p">  </p>
 	<div id="table">
-	{% if row %}
+		{% if row %}
+		<table border="0" align="center" style="text-align:center; color:#880000">
+		<tr><th><h2><font color="#880000">UserName</font></h2></th>
+		<th><h2><font color="#880000">FirstName</font></h2></th>
+		<th><h2><font color="#880000">LastName</font></h2></th></tr>
 		{% for v in row %}
-		<div id="text">
-		<p hidden>i = {{v.0}}</p>
-		<p><h3><font color="black">{{v.1}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{v.2}}<button  style="float:right;margin-right:250px" value={{v.0}} onclick="func(this)">SendRequest</button></h3></p>
-		</div>
-		<script>
+		<tr><td><h3><font color="black">{{v.3}}</font></h3></td>
+		<td><h3><font color="black">{{v.1}}</font></h3></td>
+		<td><h3><font color="black">{{v.2}}</font></h3></td>
+		<td><h3><font color="black">
+		<button  style="color:black;background-color:#B0B0B0;" 
+		value={{v.0}} onclick="func(this)">Send Request</button></font></h3></td></tr>
+		<br>
+		{% endfor %}
+		</table>
+	{% else %}
+		<p> no display</p>
+	{% endif %}
+	<br>
+		<h3><font color="black"><a href="/homepage/"> goback</a>
+	</div>
+			<script>
 		function func(objButton)
 		{
 		var x = objButton.value;
@@ -69,11 +81,5 @@
 		window.location="/frequest/" + x;
 		}
 		</script>
-		{% endfor %}
-	{% else %}
-		<p> no display</p>
-	{% endif %}
-	</div>
-	
 	
 {% endblock %}

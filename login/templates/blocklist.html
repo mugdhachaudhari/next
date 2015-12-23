@@ -45,38 +45,37 @@
 			padding:5px;
 			text-align:center;
 			}
-	#text{
-	margin-left:10px;}
+			#text{
+	margin-left:100px;}
+	#button{
+	margin-left:200px;}
 	</style>
 	<div id="header">
-			<h2><em>Neighbours</em></h2>
+		<h2><em>Blocks</em></h2>
 	</div>
+	<p id="p">    </p>
 	<div id="table">
-		{% if id %}
-		<table border="0" align="center" style="text-align:center; color:#880000">
-		<tr><th><h2><font color="#880000">UserName</font></h2></th>
-		<th><h2><font color="#880000">FirstName</font></h2></th>
-		<th><h2><font color="#880000">LastName</font></h2></th></tr>
-		{% for v in id %}
-		<tr><td><h3><font color="black">{{v.3}}</font></h3></td>
-		<td><h3><font color="black">{{v.1}}</font></h3></td>
-		<td><h3><font color="black">{{v.2}}</font></h3></td>
-		<td><h3><font color="black">
-		<button  style="color:black;background-color:#B0B0B0;" 
-		value={{v.0}} onclick="func(this)">View Profile</button></font></h3></td></tr>
-		<br>
-		{% endfor %}
-		</table>
-		{% else %}
-			<p><h3><font color="black">OOPS!!!You have no neighbours.</font></h3></p>
-		{% endif %}
-		<br>
-				<h3><font color="black"><a href="/homepage/"> goback</a>
-	</div>
-			<script>
+{% if row %}
+<table border="0" cellspacing = "10" >
+		{% for v in row %} 
+		<div id="text">
+	<tr><td hidden >{{v.bid}}</td><td>{{v.blkdesc}}</td><td>{{ v.nec }}</td><td>{{ v.swc }}</td><td><button  style = "float:right" value={{v.bid}} onclick="func(this)">Send Request</button></td></tr>
+</div>
+
+	{% endfor %}
+	</table>
+	{% else %}
+		<p> no display</p>
+	{% endif %}
+		</div>
+		
+	<h3><font color="black"><a href="/homepage/">goback</a>
+
+	<script>
 	function func(objButton){
 	var x = objButton.value;
 		document.cookie= x;
-		window.location="/viewfrndprofile/" + x;}
+		window.location="/sendblkreq/" + x;}
 	</script>
+	
 {% endblock %}

@@ -61,12 +61,20 @@
 			<h1>Create Reply Message</h1>
 		</div>
 		<div id="table">
+				<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 			<form method="post" action=".">{% csrf_token %}
-				<table border="0">
-					{{ form.as_table }}
+				<table border="0"> 
+					<tr><td>Title : </td>
+					<td> {{ form.title }}</td><tr>
+					<tr><td>Textbody : </td>
+					<td> {{ form.textbody }}</td><tr>
+					<tr><td>Loccord : </td>
+					<td> {{ form.loccord }}</td><tr>
+					{{ form.media }}
 				</table>
 				<input  type="submit" value="next"/>
-		</div>
+
 		</form>
-			
+		<h3><font color="black"><a href="/homepage/"> goback</a>
+					</div>
 {% endblock %}

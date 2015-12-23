@@ -4,12 +4,6 @@
 {% block title %}Heres's your news feed{{user}}{% endblock %}
 {% block head %}Here's your news feed{{user}}{% endblock %}
 {% block content %}
-	{% if notifications.count > 0 %}
-		<h3> notification</h3>
-		{% for n in notifications %}
-			<p><a href="/notification/show/{{n.id}}">{{n.title}}</a></p>
-		{% endfor %}
-	{% endif %}
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -85,19 +79,20 @@
 				<a href="/blocks/">Blocks</a>&nbsp&nbsp
 				<a href="/notifications/">Notifications</a>&nbsp&nbsp
 				<a href="/friendrequest/">Friend Request</a>&nbsp
+				<a href="/addnbrlist/">Add Neighbour</a>&nbsp
 
 
 			</div>
 		</div>
 			<div id="feeds">
-				<h3><a href="/friendthreads/" target="content">Friend Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="blockthreads" target="content">Block Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="neighbourhoodthreads" target="content">Neighbourhood Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="neighbourthreads" target="content">Neighbour Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<br></h3>
+				<h3><a href="/friendthreads/" target="content">Friend Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp <a href="/blockthreads/" target="content">Block Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="/neighbourhoodthreads/" target="content">Neighbourhood Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="/neighbourthreads/" target="content">Neighbour Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<br></h3>
 			</div>
 		<div id="section">
 			<h3><em> The threads are:</em></h3>
-			<table border="0" align="center">
 			{% if row %}
+			<table border="0" align = "center">
 				{% for v in row %}
-				<tr><td><h3>{{v.1}}</h3></td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func(this)">View</button><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func1(this)">Reply</button></td></tr>
+				<tr><td>{{v.1}}</td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func(this)">View</button></td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func1(this)">Reply</button></td></tr>
 					<br>
 				{% endfor %}
 			</table>
