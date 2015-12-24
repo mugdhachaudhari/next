@@ -46,6 +46,7 @@ urlpatterns = [
     url(r'^msgmap/([0-9]*)/$', msgmap),
     url(r'^viewprofile/$', viewownprofile),
 	url(r'^viewfrndprofile/([0-9]*)/$', viewfrndprofile),
+    url(r'^viewmapprofile/([0-9]*)/$', viewmapprofile),
 	# url(r'^checkproc/$', checkproc),
 	url(r'^checkproccur/$', checkproccur),
     url(r'^home/$', home),

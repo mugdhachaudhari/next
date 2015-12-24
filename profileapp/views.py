@@ -37,6 +37,13 @@ def viewfrndprofile(request, x):
 	u = User.objects.get(id = x)
 	prfl = u.profile
 	return render_to_response('viewprofile.html',{ 'user': u, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
+    
+@login_required
+def viewmapprofile(request, x):
+#     filename = "C:\Users\Vasundhara Patil\Documents\GitHub\next\media\uploaded_files\ab1_1449302455_874656_Frozen_Queen_Elsa_Wallpaper.jpg"
+    u = User.objects.get(id = x)
+    prfl = u.profile
+    return render_to_response('viewmapprofile.html',{ 'user': u, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
 
 
 def profile(request):

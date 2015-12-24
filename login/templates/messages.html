@@ -2,6 +2,7 @@
 {% block title %}User Registration{% endblock %}
 {% block content %}
 	<html>
+	
 		<style>
 		#header {
 			background-color:#880000;
@@ -92,13 +93,14 @@
 					<td> {{ form.title }}</td><tr>
 					<tr><td>Textbody : </td>
 					<td> {{ form.textbody }}</td><tr>
-					<tr><td></td><td><button id ="demo" onclick="getLocation()">disclose your Location</button></td></tr>
+					<tr><td></td><td><input type = "radio" id ="demo" onclick="getLocation()">disclose your Location</td></tr>
 					<tr><td>Loccord : </td>
 					<td> {{ form.loccord }}</td><tr>
 					{{ form.media }}
 				</table>
 				<input  type="submit" value="next"/>
-		</div>
+<h3><font color="black"><a href="/homepage/" align="center">goback</a></font></h3>	
+	</div>
 		</form>
 		
 
