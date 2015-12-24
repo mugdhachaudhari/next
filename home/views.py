@@ -430,7 +430,7 @@ def newms(request):
 	})
  
 	return render_to_response(
-	'messages.html',
+	'messagemany.html',
 	variables,
 	)
 	
@@ -931,9 +931,25 @@ def search(request):
     )
     
 def mapview(request):
-	msg = Messages.objects.exclude(loccord=None)	
-	for x in msg:
-		x.textbody = (x.textbody).replace('\n', ' ').replace('\r', '')
+# 	msg = Messages.objects.exclude(loccord=None)	
+# 	for x in msg:
+# 		x.textbody = (x.textbody).replace('\n', ' ').replace('\r', '')
+	cursor = connection.cursor()
+	m = request.session['userid']
+	#return HttpResponse(m)
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	showcur = cursor.var(cx_Oracle.CURSOR).var
+	result = cursor.callproc('allfeedsMap', [m,showcur, err_cd, err_msg])
+	#return HttpResponse(result[2])
+	if result[2] == '0':
+		msg = result[1].fetchall()
+	else:
+		response = HttpResponse()
+		response.write(result[2])
+		response.write(" ")
+		response.write(result[3])
+		msg=''
 	cursor = connection.cursor()
 	m = request.session['userid']
 	err_cd = cursor.var(cx_Oracle.NUMBER).var

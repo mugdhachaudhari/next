@@ -37,8 +37,6 @@
 			padding:5px
 				}
 			#section {
-			top:100px;
-			width:600px;
 			float:left;
 			padding:10px;	 	 
 				}
@@ -88,9 +86,10 @@
 				<h3><a href="/friendthreads/" target="content">Friend Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp <a href="/blockthreads/" target="content">Block Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="/neighbourhoodthreads/" target="content">Neighbourhood Feeds</a>&nbsp&nbsp&nbsp&nbsp<a href="/neighbourthreads/" target="content">Neighbour Feeds</a>&nbsp&nbsp&nbsp&nbsp&nbsp<br></h3>
 			</div>
 		<div id="section">
-			<h3><em> The threads are:</em></h3>
+			
 			{% if row %}
-			<table border="0" align = "center">
+			<table border="0" style="align:center;margin-left:300px;margin-top:10px;position:absolute;">
+			<tr><td><h3><em> The threads are:</em></h3></td></tr>
 				{% for v in row %}
 				<tr><td>{{v.1}}</td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func(this)">View</button></td><td><button style="color:#880000;background-color:#B0B0B0" value={{v.0}} onclick="func1(this)">Reply</button></td></tr>
 					<br>

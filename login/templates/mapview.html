@@ -138,17 +138,17 @@
 
   
   {% for m in msg %}
-        var point = new google.maps.LatLng({{m.loccord.latitude}},{{m.loccord.longitude}});
+        var point = new google.maps.LatLng({{ m.5 }});
             var image = 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png';
             var marker = new google.maps.Marker({
             position: point,
             map: map,
 			//icon: image, 
-            url: '/msgmap/' + {{m.msgid}},
-           title: '{{ m.title }}',
+            url: '/msgmap/' + {{m.6}},
+           title: '{{ m.0 }}',
         });
              marker['infowindow']  = new google.maps.InfoWindow({
-                     content: "<h1>{{m.title}}</h1> <br> {{ m.textbody }} <p> <a href='\/msgmap\/{{ m.msgid }}'> {{ m.title }}</a>",
+                     content: "<h1>{{m.0}}</h1> <br> {{ m.3 }} <p> <a href='\/msgmap\/{{ m.6 }}'> {{ m.0 }}</a>",
         });
             google.maps.event.addListener(marker, 'click', function() {
                 //window.location.href = this.url;
