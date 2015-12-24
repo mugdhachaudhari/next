@@ -3,7 +3,7 @@
 {% block content %}
 <!DOCTYPE html>
   <head>
-    <title>Simple click event</title>
+    <title>Map View</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <style>
@@ -85,7 +85,7 @@
   function initialize() {
     var mapDiv = document.getElementById('map-canvas');
     map = new google.maps.Map(mapDiv, {
-      center: new google.maps.LatLng(40.758769, -73.985167),
+      center: new google.maps.LatLng(40.758869, -73.975167),
       zoom: 15,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
