@@ -18,6 +18,7 @@ from nextnbr.settings import MEDIA_URL
 from decimal import Decimal
 from profileapp.models import UserProfile
 from home.models import Blockmembers
+from home.models import Messages
 
 # from django.contrib.gis.geos import polygon
 
@@ -162,10 +163,10 @@ def blocks(request):
 		listblks = []
 		blks = Blocks.objects.all()
 		for x in blks:
-			ymax = Decimal(x.nec.split(',')[0])
-			xmax = Decimal(x.nec.split(',')[1])
-			ymin = Decimal(x.swc.split(',')[0])
-			xmin = Decimal(x.swc.split(',')[1])
+			ymax = Decimal(x.nec.latitude)
+			xmax = Decimal(x.nec.longitude)
+			ymin = Decimal(x.swc.latitude)
+			xmin = Decimal(x.swc.longitude)
 #         rx = range(xmax, xmin)
 #         ry = range(ymax, ymin)
 			if lng >= xmax and lng <= xmin and lat >= ymax and lat <= ymin :
@@ -429,7 +430,7 @@ def newms(request):
 	})
  
 	return render_to_response(
-	'messages.html',
+	'messagemany.html',
 	variables,
 	)
 	
@@ -929,6 +930,62 @@ def search(request):
     variables,
     )
     
+def mapview(request):
+# 	msg = Messages.objects.exclude(loccord=None)	
+# 	for x in msg:
+# 		x.textbody = (x.textbody).replace('\n', ' ').replace('\r', '')
+	cursor = connection.cursor()
+	m = request.session['userid']
+	#return HttpResponse(m)
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	showcur = cursor.var(cx_Oracle.CURSOR).var
+	result = cursor.callproc('allfeedsMap', [m,showcur, err_cd, err_msg])
+	#return HttpResponse(result[2])
+	if result[2] == '0':
+		msg = result[1].fetchall()
+	else:
+		response = HttpResponse()
+		response.write(result[2])
+		response.write(" ")
+		response.write(result[3])
+		msg=''
+	cursor = connection.cursor()
+	m = request.session['userid']
+	err_cd = cursor.var(cx_Oracle.NUMBER).var
+	err_msg = cursor.var(cx_Oracle.STRING).var
+	blkmembrs = cursor.var(cx_Oracle.CURSOR).var
+	result = cursor.callproc('showallblkmembersaddr', [m,blkmembrs, err_cd, err_msg])
+	#return HttpResponse(result[1])
+	if result[2] == '0':
+		blkmbr = result[1].fetchall()
+	else:
+		response = HttpResponse()
+		response.write(result[2])
+		response.write(" ")
+		response.write(result[3])
+		blkmbr=''
+	listblk = []
+	blks = Blocks.objects.all()
+# 	return HttpResponse(blks[0].swc.latitude)
+	for x in blks:
+# 		north = x.nec.split(',')[0]
+# 		east = x.nec.split(',')[1]
+# 		south = x.swc.split(',')[0]
+# 		west = x.swc.split(',')[1]
+		listblk.append(x)
+# 		listblk.append({'north': north, 'south' : south, 'east' : east, 'west' : west})
+# 	return HttpResponse(listblk[0]['north'])
+# 	return HttpResponse(blkmbr[0][4])		
+# 	return HttpResponse(msg)
+	return render_to_response('mapview.html', {'msg' : msg, 'blkmbr' : blkmbr, 'listblk' : listblk, 'MEDIA_URL' : MEDIA_URL} )
+
+def msgmap(request, x):
+	msg = Messages.objects.get(msgid = x)
+	u = User.objects.get(id = msg.posted_by)
+	return render_to_response('viewmsg.html', {'msg' : msg, 'u' : u})
+		
+
 #     
 # def viewmsg(request):
 #         if request.method == 'POST':

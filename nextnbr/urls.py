@@ -42,6 +42,8 @@ urlpatterns = [
     url(r'^register/$', register),
     url(r'^register/success/$', register_success),
     url(r'^home1/$', home_1),
+    url(r'^mapview/$', mapview),
+    url(r'^msgmap/([0-9]*)/$', msgmap),
     url(r'^viewprofile/$', viewownprofile),
 	url(r'^viewfrndprofile/([0-9]*)/$', viewfrndprofile),
 	# url(r'^checkproc/$', checkproc),

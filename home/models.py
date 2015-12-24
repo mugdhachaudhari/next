@@ -9,7 +9,12 @@ from geoposition import Geoposition
 
 
 class Messages(models.Model):
+	msgid = models.IntegerField(primary_key = True)
+	textbody = models.TextField(blank = True)
+	posted_by = models.IntegerField(blank = True)
 	loccord = GeopositionField(blank = True)
+	threadid = models.IntegerField(blank = True)
+	title = models.TextField(blank = True)
 	
 	class Meta:
 		managed = False

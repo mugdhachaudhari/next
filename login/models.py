@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.db.models import signals
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from geoposition.fields import GeopositionField
+from geoposition import Geoposition
 
 #from login.views import nextvalue
 
@@ -14,8 +16,8 @@ from django.dispatch import receiver
 class Blocks(models.Model):
     bid = models.IntegerField(primary_key=True)
     blkdesc = models.CharField(max_length=100, blank=True, null=True)
-    swc = models.TextField()  # This field type is a guess.
-    nec = models.TextField()  # This field type is a guess.
+    swc = GeopositionField()  # This field type is a guess.
+    nec = GeopositionField()  # This field type is a guess.
     dateentered = models.DateTimeField(blank=True, null=True)
     isactive = models.CharField(max_length=1, blank=True, null=True)
  
