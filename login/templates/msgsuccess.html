@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 	<html>
-	<p>hbbn</p>
+	<h2><em>Select Scope of Message</em></h2>
 		<form method="post" action=".">{% csrf_token %}
 		<table border="0">
 			{{form.as_table}}

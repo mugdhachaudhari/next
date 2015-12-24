@@ -58,7 +58,7 @@
 		 
 		<div id="text">
 <table border="0" cellspacing = "10" >
-	<tr>{{row}}</td><td><button  style = "float:right" value={{v.0}} onclick="func(this)">SendRequest</button></td></tr>
+	<tr><td>{{row}}</td><td><a href="/unjoinblkreq/">Unjoin</td></tr>
 
 </table>
 		</div>
@@ -69,7 +69,7 @@
 	function func(objButton){
 	var x = objButton.value;
 		document.cookie= x;
-		window.location="/sendblkreq/" + x;}
+		window.location="/unjoinblkreq/" + x;}
 	</script>
 	
 {% endblock %}

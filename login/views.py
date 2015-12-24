@@ -67,26 +67,26 @@ def home_1(request):
     return render_to_response('home_1.html',{ 'user': request.user, 'MEDIA_URL' : MEDIA_URL, 'prfl' : prfl })
 
 
-def blockrequest(request):
-    lat = request.user.profile.loc.latitude
-    lng = request.user.profile.loc.longitude
-    listblks = []
-    blks = Blocks.objects.all()
-    for x in blks:
-        ymax = Decimal(x.nec.split(',')[0])
-        xmax = Decimal(x.nec.split(',')[1])
-        ymin = Decimal(x.swc.split(',')[0])
-        xmin = Decimal(x.swc.split(',')[1])
-#         rx = range(xmax, xmin)
-#         ry = range(ymax, ymin)
-        if lng >= xmax and lng <= xmin and lat >= ymax and lat <= ymin :
-             listblks.append(x)
-#     ne =nec.split(',')[0] request.user.profile.loc.latitude
-#     sw = request.user.profile.loc.longitude
-#     bbox = ("XMIN = " ,xmin," YMIN = ", ymin, " XMAX  = ", xmax, " YMAX ",  ymax)
-#     geom = Polygon.from_bbox(bbox)
-#     return HttpResponse(bbox)
-    return HttpResponse(listblks)
+# def blockrequest(request):
+#     lat = request.user.profile.loc.latitude
+#     lng = request.user.profile.loc.longitude
+#     listblks = []
+#     blks = Blocks.objects.all()
+#     for x in blks:
+#         ymax = Decimal(x.nec.split(',')[0])
+#         xmax = Decimal(x.nec.split(',')[1])
+#         ymin = Decimal(x.swc.split(',')[0])
+#         xmin = Decimal(x.swc.split(',')[1])
+# #         rx = range(xmax, xmin)
+# #         ry = range(ymax, ymin)
+#         if lng >= xmax and lng <= xmin and lat >= ymax and lat <= ymin :
+#              listblks.append(x)
+# #     ne =nec.split(',')[0] request.user.profile.loc.latitude
+# #     sw = request.user.profile.loc.longitude
+# #     bbox = ("XMIN = " ,xmin," YMIN = ", ymin, " XMAX  = ", xmax, " YMAX ",  ymax)
+# #     geom = Polygon.from_bbox(bbox)
+# #     return HttpResponse(bbox)
+#     return HttpResponse(listblks)
 
 def search(request):
     if request.method == 'POST':
