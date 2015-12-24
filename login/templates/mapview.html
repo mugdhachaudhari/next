@@ -116,11 +116,11 @@
             position: point,
             map: map,
 			icon: image, 
-            url: '/msgmap/' + {{b.0}},
+            url: '/viewfrndprofile/' + {{b.0}},
            title: '{{ b.3 }}',
         });
              marker['infowindow']  = new google.maps.InfoWindow({
-                     content: "<h1>{{b.3}}</h1><p>",
+                     content: "<h1>{{b.3}}</h1><p><a href='\/viewfrndprofile\/{{ b.0 }}'> {{ b.3 }}</a>",
         });
             google.maps.event.addListener(marker, 'click', function() {
                 //window.location.href = this.url;
